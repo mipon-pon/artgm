@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ARETHA Word Puzzle</title>
+    <style>
+        @font-face {
+            font-family: 'ArethaCustom';
+            src: url('A-RETHA-light.ttf') format('truetype');
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: #1a1a2e;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            color: #fff;
+            font-family: sans-serif;
+            overflow: hidden;
+            touch-action: none;
+        }
+
+        .metallic-text {
+            font-family: 'ArethaCustom', sans-serif;
+            background: linear-gradient(to bottom, #2980b9 0%, #6dd5ed 30%, #ffffff 50%, #3498db 70%, #1b4f72 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(1px 1px 0px #111) drop-shadow(-1px -1px 0px #111);
+        }
+
+        h1 {
+            margin: 5px;
+            font-size: 26px;
+            letter-spacing: 2px;
+        }
+        .font-a {
+            font-family: 'ArethaCustom', sans-serif;
+        }
+
+        #info-bar {
+            width: 340px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: #aaa;
+            padding: 0 5px;
+            box-sizing: border-box;
+        }
+        #next-container {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        #next-preview {
+            font-weight: bold;
+            font-size: 18px;
+        }
+        #timer-display {
+            font-family: monospace;
+            font-size: 16px;
+            color: #6dd5ed;
+        }
+        #game-container {
+            position: relative;
+            width: 340px;
+            height: 520px;
+            background: #16213e;
+            border: 4px solid #0f3460;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            overflow: hidden;
+            cursor: pointer;
+        }
+        canvas {
+            display: block;
+        }
+        .instruction {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #aaa;
+        }
+        #clear-screen, #gameover-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.88);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+        #clear-logo {
+            font-size: 42px;
+            font-weight: bold;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+        }
+        #clear-time {
+            font-size: 20px;
+            color: #6dd5ed;
+            margin-bottom: 10px;
+        }
+        #clear-praise {
+            font-size: 15px;
+            color: #ffde59;
+            margin-bottom: 25px;
+            line-height: 1.4;
+        }
+        #gameover-screen h2 {
+            font-size: 36px;
+            color: #fff;
+            margin-bottom: 20px;
+            font-family: 'ArethaCustom', sans-serif;
+        }
+        .btn {
+            padding: 10px 24px;
+            font-size: 16px;
+            background: #e94560;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+    </style>
+    <!-- Matter.js 物理演算ライブラリ -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+</head>
+<body>
+
+    <h1 class="metallic-text">ArethA PuzzlE</h1>
+    <div id="info-bar">
+        <div id="next-container">
+            <span>NEXT:</span>
+            <span id="next-preview" class="metallic-text">A</span>
+        </div>
+        <div id="timer-display">00.0秒</div>
+    </div>
+    <div id="game-container">
+        <div id="clear-screen">
+            <div id="clear-congrats" style="padding-bottom:10px;">＼Congratulations／</div>
+            <div id="clear-logo" class="metallic-text">ArethA</div>
+            <div id="clear-time">[タイム] 00.0秒</div>
+            <div id="clear-praise">ここに褒め言葉が入るよ</div>
+            <button class="btn" onclick="restartGame()">もう一度あそぶ</button>
+        </div>
+        <div id="gameover-screen">
+            <h2>GamE OveR</h2>
+            <button class="btn" onclick="restartGame()">もう一度挑戦</button>
+        </div>
+    </div>
+    <div class="instruction">上から文字を落として<span class="font-a">ArethA</span>を完成させよう！</div>
+
+    <script>
+        const { Engine, Render, Runner, Bodies, Composite, Events } = Matter;
+
+        const width = 340;
+        const height = 520;
+
+        let engine, world, render, runner;
+        let isGameEnd = false;
+        let isGameStarted = false; // タイマーがスタートしたかどうか
+        let startTime = 0;
+        let timerInterval = null;
+        let finalTimeSec = 0;
+
+        const levels = [
+            { label: 'A',     radius: 20 },
+            { label: 'AR',    radius: 27 },
+            { label: 'ARE',   radius: 35 },
+            { label: 'ARET',  radius: 43 },
+            { label: 'ARETH', radius: 52 },
+            { label: 'ARETHA',radius: 62 }
+        ];
+
+        let currentNextLevel = getRandomStartLevel();
+        function getRandomStartLevel() {
+            return Math.random() < 0.8 ? 0 : 1;
+        }
+
+        const OVER_LINE_Y = 120;
+
+        function initGame() {
+            if (render) {
+                Render.stop(render);
+                Runner.stop(runner);
+                render.canvas.remove();
+            }
+            
+            engine = Engine.create();
+            engine.world.gravity.y = 1.2;
+            world = engine.world;
+            isGameEnd = false;
+            isGameStarted = false; // 初期化時は未スタート
+            clearInterval(timerInterval);
+            document.getElementById('timer-display').innerText = '00.0秒';
+
+            currentNextLevel = getRandomStartLevel();
+            updateNextPreview();
+
+            render = Render.create({
+                element: document.getElementById('game-container'),
+                engine: engine,
+                options: {
+                    width: width,
+                    height: height,
+                    wireframes: false,
+                    background: '#16213e'
+                }
+            });
+
+            Render.run(render);
+            runner = Runner.create();
+            Runner.run(runner, engine);
+
+            const wallOptions = { isStatic: true, render: { fillStyle: '#0f3460' } };
+            const ground = Bodies.rectangle(width / 2, height + 20, width, 40, wallOptions);
+            const leftWall = Bodies.rectangle(-20, height / 2, 40, height, wallOptions);
+            const rightWall = Bodies.rectangle(width + 20, height / 2, 40, height, wallOptions);
+            Composite.add(world, [ground, leftWall, rightWall]);
+
+            Events.on(render, 'afterRender', drawCustomElements);
+            Events.on(engine, 'collisionStart', handleCollisions);
+        }
+
+        function updateNextPreview() {
+            document.getElementById('next-preview').innerText = levels[currentNextLevel].label;
+        }
+
+        function updateTimer() {
+            if (isGameEnd || !isGameStarted) return;
+            const elapsed = (Date.now() - startTime) / 1000;
+            document.getElementById('timer-display').innerText = elapsed.toFixed(1) + '秒';
+        }
+
+        function drawCustomElements() {
+            const context = render.context;
+
+            // 背景の真ん中にうっすらARETHAを描画
+            context.save();
+            context.font = 'bold 45px "ArethaCustom", sans-serif';
+            context.fillStyle = 'rgba(255, 255, 255, 0.04)';
+            context.textAlign = 'center';
+            context.textBaseline = 'middle';
+            context.fillText('ArethA', width / 2, 300);
+            context.restore();
+
+            // 警告ラインの描画
+            context.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+            context.lineWidth = 2;
+            context.setLineDash([5, 5]);
+            context.beginPath();
+            context.moveTo(20, OVER_LINE_Y);
+            context.lineTo(width - 20, OVER_LINE_Y);
+            context.stroke();
+            context.setLineDash([]);
+
+            const bodies = Composite.allBodies(world);
+            
+            // クリア判定：最高レベル（ARETHA）が画面内に存在していればクリア
+            if (!isGameEnd && isGameStarted) {
+                let arethaCount = 0;
+                for (let i = 0; i < bodies.length; i++) {
+                    if (bodies[i].level === levels.length - 1 && !bodies[i].isRemoved) {
+                        arethaCount++;
+                    }
+                }
+                if (arethaCount >= 1) {
+                    triggerGameClear();
+                    return;
+                }
+            }
+
+            for (let i = 0; i < bodies.length; i++) {
+                const body = bodies[i];
+                if (body.customLabel) {
+                    context.save();
+                    context.translate(body.position.x, body.position.y);
+                    context.rotate(body.angle);
+
+                    const size = Math.max(16, Math.round(body.circleRadius * 0.95));
+                    context.font = `${size}px 'ArethaCustom', sans-serif`;
+                    context.textAlign = 'center';
+                    context.textBaseline = 'middle';
+
+                    const grad = context.createLinearGradient(0, -size / 2, 0, size / 2);
+                    grad.addColorStop(0.0, '#2980b9');
+                    grad.addColorStop(0.3, '#6dd5ed');
+                    grad.addColorStop(0.5, '#ffffff');
+                    grad.addColorStop(0.7, '#3498db');
+                    grad.addColorStop(1.0, '#1b4f72');
+
+                    context.fillStyle = grad;
+                    context.lineWidth = 3;
+                    context.strokeStyle = '#111122';
+                    context.strokeText(body.customLabel, 0, 0);
+                    context.fillText(body.customLabel, 0, 0);
+
+                    context.restore();
+                }
+            }
+
+            // ゲームオーバー判定
+            if (!isGameEnd && isGameStarted) {
+                for (let i = 0; i < bodies.length; i++) {
+                    const body = bodies[i];
+                    if (body.customLabel && !body.isStatic) {
+                        if (body.position.y < OVER_LINE_Y && 
+                            (Date.now() - body.spawnTime > 1500) && 
+                            Math.abs(body.velocity.y) < 0.3 && 
+                            Math.abs(body.velocity.x) < 0.3) {
+                            triggerGameOver();
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        function handleCollisions(event) {
+            if (isGameEnd) return;
+            const pairs = event.pairs;
+
+            for (let i = 0; i < pairs.length; i++) {
+                const pair = pairs[i];
+                const bodyA = pair.bodyA;
+                const bodyB = pair.bodyB;
+
+                if (bodyA.level !== undefined && bodyA.level === bodyB.level) {
+                    if (bodyA.isRemoved || bodyB.isRemoved) continue;
+
+                    const currentLevel = bodyA.level;
+                    if (currentLevel >= levels.length - 1) return;
+
+                    bodyA.isRemoved = true;
+                    bodyB.isRemoved = true;
+
+                    const midX = (bodyA.position.x + bodyB.position.x) / 2;
+                    const midY = (bodyA.position.y + bodyB.position.y) / 2;
+
+                    Composite.remove(world, [bodyA, bodyB]);
+
+                    const nextBody = createLetterBody(midX, midY, currentLevel + 1);
+                    Composite.add(world, nextBody);
+                }
+            }
+        }
+
+        function createLetterBody(x, y, level) {
+            const config = levels[level];
+            const body = Bodies.circle(x, y, config.radius, {
+                restitution: 0.2,
+                friction: 0.1,
+                render: { visible: false }
+            });
+            body.level = level;
+            body.customLabel = config.label;
+            body.spawnTime = Date.now();
+            body.isRemoved = false;
+            return body;
+        }
+
+        function getPraiseMessage(sec) {
+            if (sec < 12) {
+                return "⚡ 光の女神級 ⚡";
+            } else if (sec < 30) {
+                return "🌟 テスタメント級 🌟";
+            } else if (sec < 40) {
+                return "💍 Gキャッツアイ級 💍";
+            } else if (sec < 60) {
+                return "💍 Sキャッツアイ級 💍";
+            } else {
+                return "💍 Bキャッツアイ級 💍";
+            }
+        }
+
+        function triggerGameClear() {
+            isGameEnd = true;
+            clearInterval(timerInterval);
+            finalTimeSec = ((Date.now() - startTime) / 1000).toFixed(1);
+
+            document.getElementById('clear-time').innerText = `タイム: ${finalTimeSec}秒`;
+            document.getElementById('clear-praise').innerText = getPraiseMessage(finalTimeSec);
+            document.getElementById('clear-screen').style.display = 'flex';
+
+            Engine.clear(engine);
+            Runner.stop(runner);
+        }
+
+        function triggerGameOver() {
+            isGameEnd = true;
+            clearInterval(timerInterval);
+            document.getElementById('gameover-screen').style.display = 'flex';
+            Engine.clear(engine);
+            Runner.stop(runner);
+        }
+
+        function restartGame() {
+            document.getElementById('clear-screen').style.display = 'none';
+            document.getElementById('gameover-screen').style.display = 'none';
+            initGame();
+        }
+
+        let canDrop = true;
+        function handleDrop(clientX) {
+            if (!canDrop || isGameEnd) return;
+
+            // ★初回クリック/タップでタイマーをスタート！
+            if (!isGameStarted) {
+                isGameStarted = true;
+                startTime = Date.now();
+                clearInterval(timerInterval);
+                timerInterval = setInterval(updateTimer, 100);
+            }
+
+            const container = document.getElementById('game-container');
+            const rect = container.getBoundingClientRect();
+            const x = clientX - rect.left;
+            const dropX = Math.max(30, Math.min(width - 30, x));
+
+            const newBody = createLetterBody(dropX, 40, currentNextLevel);
+            Composite.add(world, newBody);
+
+            currentNextLevel = getRandomStartLevel();
+            updateNextPreview();
+
+            canDrop = false;
+            setTimeout(() => { canDrop = true; }, 300);
+        }
+
+        const container = document.getElementById('game-container');
+        container.addEventListener('click', function(event) {
+            handleDrop(event.clientX);
+        });
+
+        container.addEventListener('touchstart', function(event) {
+            event.preventDefault();
+            if (event.touches.length > 0) {
+                handleDrop(event.touches[0].clientX);
+            }
+        }, { passive: false });
+
+        initGame();
+    </script>
+</body>
+</html>
