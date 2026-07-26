@@ -104,6 +104,109 @@
             color: #666;
             letter-spacing: 0.5px;
         }
+        .footer-links {
+            margin-top: 6px;
+            display: flex;
+            gap: 15px;
+            font-size: 11px;
+        }
+        .footer-links span {
+            color: #6dd5ed;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+        .footer-links span:hover {
+            color: #fff;
+        }
+
+        /* 共通モーダルウィンドウのスタイル */
+        .modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.92);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        /* 閉じる（×）ボタン共通 */
+        .modal-close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 24px;
+            color: #fff;
+            background: none;
+            border: none;
+            cursor: pointer;
+            z-index: 105;
+            padding: 5px;
+            line-height: 1;
+        }
+        .modal-close-btn:hover {
+            color: #e94560;
+        }
+
+        /* スターウォーズ風エンディングのスタイル（文字センタリング） */
+        #ending-screen {
+            perspective: 300px;
+            overflow: hidden;
+            background: #000;
+        }
+        #ending-screen.active {
+            display: flex;
+        }
+        #ending-screen.active .sw-content {
+            animation: crawl 20s linear infinite;
+        }
+        .sw-fade {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(0deg, transparent 60%, rgba(0,0,0,1) 100%);
+            z-index: 102;
+            pointer-events: none;
+        }
+        .sw-content {
+            position: absolute;
+            width: 80%;
+            top: 100%;
+            color: #ffde59;
+            font-weight: bold;
+            font-size: 14px;
+            line-height: 1.8;
+            text-align: center;
+            transform-origin: 50% 100%;
+        }
+        @keyframes crawl {
+            0% {
+                transform: rotateX(25deg) translateZ(0deg) translateY(0);
+                opacity: 1;
+            }
+            100% {
+                transform: rotateX(25deg) translateZ(-150px) translateY(-800px);
+                opacity: 0.2;
+            }
+        }
+        .sw-skip-msg {
+            position: absolute;
+            bottom: 15px;
+            width: 100%;
+            font-size: 10px;
+            color: #888;
+            z-index: 103;
+            animation: blink 1.5s infinite;
+        }
+        @keyframes blink { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+
+        /* クリア画面用 */
         #clear-screen, #gameover-screen {
             position: absolute;
             top: 0;
@@ -183,20 +286,69 @@
             z-index: 20;
             -webkit-tap-highlight-color: transparent;
         }
+
+        /* オープニング画面用スタイル */
+        #opening-screen {
+            background: #000;
+            cursor: pointer;
+            overflow: hidden;
+            z-index: 105;
+        }
+
+/* オープニングで流れる文字のスタイル（144px） */
+        #op-flowing-text {
+            position: absolute;
+            white-space: nowrap;
+            font-family: 'ArethaCustom', sans-serif;
+            font-size: 144px;
+            font-weight: bold;
+            background: linear-gradient(to bottom, #777 0%, #ccc 30%, #ffffff 50%, #888 70%, #333 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(4px 4px 0px #000);
+            left: 100%; /* 画面の右端からスタート */
+            top: 50%;
+            transform: translateY(-50%); /* 垂直方向だけ中央合わせ */
+        }
+
+        /* アレサゲーム */
+        #op-center-logo {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(1);
+            font-family: 'ArethaCustom', sans-serif;
+            font-size: 36px;
+            font-weight: bold;
+            background: linear-gradient(to bottom, #2980b9 0%, #6dd5ed 30%, #ffffff 50%, #3498db 70%, #1b4f72 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(2px 2px 0px #111) drop-shadow(-2px -2px 0px #111);
+            display: none;
+            white-space: nowrap;
+        }
+
     </style>
+
     <!-- Matter.js 物理演算ライブラリ -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
 </head>
 <body>
 
     <h1 id="game-title" class="metallic-text">ArethA PuzzlE</h1>
-    <div id="info-bar">
+
+<div id="info-bar">
         <div id="next-container">
             <span>NEXT:</span>
             <span id="next-preview" class="metallic-text">A</span>
         </div>
-        <div id="timer-display">00.0秒</div>
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <div id="timer-display">00.0秒</div>
+            <button id="reset-btn" style="padding: 2px 8px; font-size: 11px; background: #e94560; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">リセット</button>
+        </div>
     </div>
+
+
     <div id="game-container">
         <div id="clear-screen">
             <div id="clear-congrats">＼Congratulations／</div>
@@ -209,9 +361,56 @@
             <h2>GameE OveR</h2>
             <button class="btn" id="gameover-btn">もう一度遊ぶ</button>
         </div>
+
+        <!-- オープニングモーダル -->
+        <div id="opening-screen" class="modal-overlay">
+            <button class="modal-close-btn" id="op-close-btn">&times;</button>
+            <div id="op-flowing-text">ArethA PuzzlE</div>
+            <div id="op-center-logo">アレサゲーム</div>
+            <div class="sw-skip-msg" style="bottom:15px;">※右上の×をクリックで閉じます</div>
+        </div>
+
+        <!-- スターウォーズ風エンディングモーダル -->
+        <div id="ending-screen" class="modal-overlay">
+            <button class="modal-close-btn" id="ed-close-btn">&times;</button>
+            <div class="sw-fade"></div>
+            <div class="sw-content">
+                【自己満制作後記】<br><br>
+				あとで怪文書レベルでめっちゃ書きます<br><br>
+				あとで怪文書レベルでめっちゃ書きます<br><br>
+				あとで怪文書レベルでめっちゃ書きます<br><br>
+				あとで怪文書レベルでめっちゃ書きます<br><br>
+				あとで怪文書レベルでめっちゃ書きます<br><br>
+				あとで怪文書レベルでめっちゃ書きます<br><br>
+				あとで怪文書レベルでめっちゃ書きます<br><br>
+				あとで怪文書レベルでめっちゃ書きます<br><br>
+				あとで怪文書レベルでめっちゃ書きます<br><br>
+				あとで怪文書レベルでめっちゃ書きます<br><br>
+				あとで怪文書レベルでめっちゃ書きます<br><br>
+				あとで怪文書レベルでめっちゃ書きます<br><br>
+				あとで怪文書レベルでめっちゃ書きます<br><br>
+				あとで怪文書レベルでめっちゃ書きます<br><br>
+				あとで怪文書レベルでめっちゃ書きます<br><br>
+				あとで怪文書レベルでめっちゃ書きます<br><br>
+				あとで怪文書レベルでめっちゃ書きます<br><br>
+				あとで怪文書レベルでめっちゃ書きます<br><br>
+				あとで怪文書レベルでめっちゃ書きます<br><br>
+				あとで怪文書レベルでめっちゃ書きます<br><br>
+                遊んでくれて本当にありがとう！<br><br>
+                — 完 —
+            </div>
+            <div class="sw-skip-msg">※右上の×をクリックで閉じます</div>
+        </div>
     </div>
+
+    <!-- foot set -->
     <div class="instruction">上から文字を落として<span class="font-a">ArethA</span>を完成させよう！<br>♥文字の当たり判定はちょっとユルめ♥</div>
+
     <div class="footer-note">&copy; 2026 みぽん (Unofficial Fan Game)</div>
+    <div class="footer-links">
+        <span id="btn-op">[見なくてもいいOP]</span>
+        <span id="btn-ed">[どうでもいいエンディング]</span>
+    </div>
 
     <script>
         const { Engine, Render, Runner, Bodies, Composite, Events } = Matter;
@@ -435,7 +634,7 @@
             return body;
         }
 
-        // 称号リスト（タイムが速い順・上から順に判定）
+        // 称号リスト
         const ranks = [
             { limit: 8,   name: "⚡ 光の女神 級 ⚡" },
             { limit: 12,  name: "✨ テスタメント 級 ✨" },
@@ -456,7 +655,7 @@
             for (let i = 0; i < ranks.length; i++) {
                 if (sec < ranks[i].limit) {
                     matchedRank = ranks[i];
-                    rankIndex = i + 1; // 何番目の級か
+                    rankIndex = i + 1;
                     break;
                 }
             }
@@ -512,7 +711,12 @@
         document.getElementById('clear-btn').addEventListener('touchend', (e) => { e.preventDefault(); restartGame(e); });
         document.getElementById('gameover-btn').addEventListener('click', restartGame);
         document.getElementById('gameover-btn').addEventListener('touchend', (e) => { e.preventDefault(); restartGame(e); });
-        
+
+// リセットボタン用のイベント追加
+        const resetBtn = document.getElementById('reset-btn');
+        resetBtn.addEventListener('click', restartGame);
+        resetBtn.addEventListener('touchend', (e) => { e.preventDefault(); restartGame(e); });
+
         const titleEl = document.getElementById('game-title');
         titleEl.addEventListener('click', restartGame);
         titleEl.addEventListener('touchend', (e) => { e.preventDefault(); restartGame(e); });
@@ -557,6 +761,125 @@
         }, { passive: false });
 
         initGame();
+
+        // ==========================================
+        // オープニング制御（全5秒：前半3秒流れる → 一瞬ブラックアウト → 後半2秒で渦巻吸い込み）
+        // ==========================================
+        const opBtn = document.getElementById('btn-op');
+        const opScreen = document.getElementById('opening-screen');
+        const opCloseBtn = document.getElementById('op-close-btn');
+        const opFlowingText = document.getElementById('op-flowing-text');
+        const opCenterLogo = document.getElementById('op-center-logo');
+        let opAnimStartTime = null;
+        let opAnimFrame = null;
+        let isOpeningActive = false;
+
+        opBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            startOpening();
+        });
+        
+        opCloseBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            closeOpening();
+        });
+
+
+        function startOpening() {
+            isOpeningActive = false;
+            opScreen.style.display = 'flex';
+            opCenterLogo.style.display = 'none';
+            opFlowingText.style.display = 'block';
+
+            opAnimStartTime = performance.now();
+            if (opAnimFrame) cancelAnimationFrame(opAnimFrame);
+
+            // 少しだけウェイトを置いてからクリックで閉じられるようにする（誤爆防止）
+            setTimeout(() => { isOpeningActive = true; }, 300);
+
+
+
+function loop(now) {
+                if (opScreen.style.display === 'none') return;
+                const elapsed = (now - opAnimStartTime) / 1000; // 経過秒数
+
+                // 前半5秒：右から左へゆっくり流す（「ArethA PuzzlE」の最後までしっかり中央を通す）
+                if (elapsed <= 5.0) {
+                    const progress = elapsed / 5.0;
+                    const leftPos = 110 - progress * 210; // 110% -> -100% までしっかり移動させて「E」まで流し切る！
+                    opFlowingText.style.left = `${leftPos}%`;
+                    opFlowingText.style.top = '50%';
+                    opFlowingText.style.transform = 'translateY(-50%)';
+                    opFlowingText.style.opacity = '1';
+                    opAnimFrame = requestAnimationFrame(loop);
+                }
+                // 【ブラックアウト演出】 5.0秒〜5.3秒の間に暗転させる
+                else if (elapsed > 5.0 && elapsed <= 5.3) {
+                    opFlowingText.style.opacity = '0';
+                    opAnimFrame = requestAnimationFrame(loop);
+                }
+                // 後半2秒（5.3秒〜7.3秒）：中央へ向かって渦巻く
+                else if (elapsed > 5.3 && elapsed <= 7.3) {
+                    const subElapsed = elapsed - 5.3;
+                    const progress = subElapsed / 2.0;
+
+                    const angle = progress * Math.PI * 4;
+                    const scale = Math.max(0.01, 1.0 - progress);
+                    const opacity = Math.max(0, 1.0 - progress);
+                    
+                    opFlowingText.style.left = '50%';
+                    opFlowingText.style.top = '50%';
+                    opFlowingText.style.transform = `translate(-50%, -50%) scale(${scale}) rotate(${angle}rad)`;
+                    opFlowingText.style.opacity = opacity;
+
+                    opAnimFrame = requestAnimationFrame(loop);
+                }
+                // 7.3秒以降：「アレサゲーム」ロゴを中央に登場
+                else if (elapsed > 7.3 && elapsed <= 9.3) {
+                    opFlowingText.style.display = 'none';
+                    opCenterLogo.style.display = 'block';
+                    opCenterLogo.style.transform = 'translate(-50%, -50%) scale(1)';
+                    opCenterLogo.style.opacity = '1';
+                    opAnimFrame = requestAnimationFrame(loop);
+                } else {
+                    closeOpening();
+                    return;
+                }
+            }
+
+
+
+            opAnimFrame = requestAnimationFrame(loop);
+        }
+
+        function closeOpening() {
+            if (opAnimFrame) cancelAnimationFrame(opAnimFrame);
+            isOpeningActive = false;
+            opScreen.style.display = 'none';
+            opFlowingText.style.display = 'block';
+            opCenterLogo.style.display = 'none';
+        }
+
+        // ==========================================
+        // スターウォーズ風エンディングの制御
+        // ==========================================
+        const edBtn = document.getElementById('btn-ed');
+        const edScreen = document.getElementById('ending-screen');
+        const edCloseBtn = document.getElementById('ed-close-btn');
+
+        edBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            edScreen.classList.add('active');
+        });
+
+        edCloseBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            edScreen.classList.remove('active');
+        });
+
+        edScreen.addEventListener('click', () => {
+            edScreen.classList.remove('active');
+        });
     </script>
 </body>
 </html>
