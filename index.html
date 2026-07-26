@@ -270,40 +270,40 @@ text-align: center;
 
 
 #ending-screen.active .sw-content {
-    animation: crawl 38s linear forwards;
+animation: crawl 64s linear forwards;
 }
 
 .sw-fade {
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: linear-gradient(0deg, transparent 80%, rgba(0,0,0,1) 100%);
-    z-index: 102;
-    pointer-events: none;
+position: absolute;
+top: 0; left: 0; width: 100%; height: 100%;
+background: linear-gradient(0deg, transparent 80%, rgba(0,0,0,1) 100%);
+z-index: 102;
+pointer-events: none;
 }
 
 .sw-content {
-    position: absolute;
-    width: 80%;
-    top: 100%;
-    color: #ffde59;
-    font-weight: bold;
-    font-size: 12px;
-    line-height: 1.4;
-    text-align: center;
-    padding-bottom: 400px; /* 最後の行を真ん中に止めるための下部余白 */
+position: absolute;
+width: 80%;
+top: 100%;
+color: #ffde59;
+font-weight: bold;
+font-size: 12px;
+line-height: 1.4;
+text-align: center;
+padding-bottom: 400px; /* 最後の行を真ん中に止めるための下部余白 */
 }
 
 @keyframes crawl {
-    0% {
-        transform: translateY(0);
-        opacity: 1;
-    }
-    100% {
-        /* 等速でスーッと流れて、最後の行がど真ん中でピタッと停止します */
-        /* ※もし位置がズレる場合は、ここの「-1650px」の数字を微調整してね！ */
-        transform: translateY(-1650px);
-        opacity: 1;
-    }
+0% {
+transform: translateY(0);
+opacity: 1;
+}
+100% {
+/* 等速でスーッと流れて、最後の行がど真ん中でピタッと停止します */
+/* ※もし位置がズレる場合は、ここの「-1650px」の数字を微調整してね！ */
+transform: translateY(-1650px);
+opacity: 1;
+}
 }
 
 .sw-skip-msg {
