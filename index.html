@@ -7,11 +7,11 @@
     <meta name="description" content="ARETHAの文字を作って遊ぶ某スイカゲームパズルゲームだよ(非公認)">
     <meta property="og:title" content="アレサゲーム-ARETHA Word Puzzle">
     <meta property="og:description" content="ARETHAの文字を作って遊ぶ某スイカゲームパズルゲームだよ(非公認)">
-    <meta property="og:image" content="https://mipon-pon.github.io/artgm/ogp.png">
+    <meta property="og:image" content="https://mipon-pon.github.io/artgm/OGP.png">
     <meta property="og:url" content="https://mipon-pon.github.io/artgm/">
     <meta name="twitter:card" content="summary_large_image">
+    <!-- ファビコンの設定 -->
     <link rel="icon" type="image/png" href="favicon.png">
-
     <style>
         @font-face {
             font-family: 'ArethaCustom';
@@ -96,6 +96,7 @@
             margin-top: 6px;
             font-size: 13px;
             color: #aaa;
+            text-align: center;
         }
         .footer-note {
             margin-top: 4px;
@@ -137,7 +138,7 @@
             font-size: 13px;
             color: #ffde59;
             letter-spacing: 1px;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             font-weight: bold;
             transition-delay: 0.2s;
         }
@@ -145,20 +146,20 @@
             font-size: 38px;
             font-weight: bold;
             letter-spacing: 2px;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             transition-delay: 0.4s;
         }
         #clear-time {
-            font-size: 18px;
+            font-size: 17px;
             color: #6dd5ed;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             transition-delay: 0.6s;
         }
         #clear-praise {
-            font-size: 14px;
+            font-size: 13px;
             color: #ffde59;
-            margin-bottom: 18px;
-            line-height: 1.3;
+            margin-bottom: 14px;
+            line-height: 1.4;
             transition-delay: 0.8s;
         }
         #clear-btn {
@@ -209,8 +210,9 @@
             <button class="btn" id="gameover-btn">もう一度遊ぶ</button>
         </div>
     </div>
-    <div class="instruction">上から文字を落として<span class="font-a">ArethA</span>を完成させよう！</div>
+    <div class="instruction">上から文字を落として<span class="font-a">ArethA</span>を完成させよう！<br>♥文字の当たり判定はちょっとユルめ♥</div>
     <div class="footer-note">&copy; 2026 みぽん (Unofficial Fan Game)</div>
+
     <script>
         const { Engine, Render, Runner, Bodies, Composite, Events } = Matter;
 
@@ -433,18 +435,33 @@
             return body;
         }
 
+        // 称号リスト（タイムが速い順・上から順に判定）
+        const ranks = [
+            { limit: 8,   name: "⚡ 光の女神 級 ⚡" },
+            { limit: 12,  name: "✨ テスタメント 級 ✨" },
+            { limit: 16,  name: "🌟 ミレニアム 級 🌟" },
+            { limit: 22,  name: "🐉 ペンタドラゴン 級 🐉" },
+            { limit: 28,  name: "💎 6,500,000PERA 級 💎" },
+            { limit: 32,  name: "💍 Gキャッツアイ 級 💍" },
+            { limit: 55,  name: "💍 Sキャッツアイ 級 💍" },
+            { limit: 70,  name: "💍 Bキャッツアイ 級 💍" },
+            { limit: 120, name: "💰 しゃっきんトンボ 級 💰" },
+            { limit: 999, name: "🐢 おじぃ 級 🐢" }
+        ];
+
         function getPraiseMessage(sec) {
-            if (sec < 10) {
-                return "⚡ 光の女神 級 ⚡";
-            } else if (sec < 20) {
-                return "🌟 テスタメント 級 🌟";
-            } else if (sec < 40) {
-                return "💍 Gキャッツアイ 級 💍";
-            } else if (sec < 60) {
-                return "💍 Sキャッツアイ 級 💍";
-            } else {
-                return "💍 Bキャッツアイ 級 💍";
+            let matchedRank = ranks[ranks.length - 1];
+            let rankIndex = ranks.length;
+
+            for (let i = 0; i < ranks.length; i++) {
+                if (sec < ranks[i].limit) {
+                    matchedRank = ranks[i];
+                    rankIndex = i + 1; // 何番目の級か
+                    break;
+                }
             }
+            const totalRanks = ranks.length;
+            return `${matchedRank.name}<br><span style="font-size:11px; color:#aaa; font-weight:normal;">(全 ${totalRanks} 級中 / 第 ${rankIndex} 位)</span>`;
         }
 
         function triggerGameClear() {
@@ -453,8 +470,8 @@
             finalTimeSec = ((Date.now() - startTime) / 1000).toFixed(1);
             clearAnimTimer = Date.now();
 
-            document.getElementById('clear-time').innerText = `タイム: ${finalTimeSec}秒`;
-            document.getElementById('clear-praise').innerText = getPraiseMessage(finalTimeSec);
+            document.getElementById('clear-time').innerText = `[タイム] ${finalTimeSec}秒`;
+            document.getElementById('clear-praise').innerHTML = getPraiseMessage(finalTimeSec);
             
             const clearScreen = document.getElementById('clear-screen');
             clearScreen.style.display = 'flex';
@@ -491,7 +508,6 @@
             }, 300);
         }
 
-        // ボタン＆タイトルクリックのイベント設定
         document.getElementById('clear-btn').addEventListener('click', restartGame);
         document.getElementById('clear-btn').addEventListener('touchend', (e) => { e.preventDefault(); restartGame(e); });
         document.getElementById('gameover-btn').addEventListener('click', restartGame);
