@@ -578,7 +578,13 @@ else if (rand < 0.94) return 4;  // Areth (2%)
 else return 6;				   // ★AREJHA (6%の確率で混入！)
 }
 
-const OVER_LINE_Y = 70;
+//GAME OVERの判定部分
+//判定ライン（OVER_LINE_Y）を少し下（数字を大きく）にするいまは 70 になっているから、ここを 90 や 100 あたりにすると、少し積み上がっただけで即アウトになるよ。
+//滞留時間（spawnTime の比較）を短くするいまは 1000（1秒間）止まっていたらアウトだけど、ここを 500（0.5秒）などに縮めると、天井付近でモタモタしているときの猶予がなくなって厳しくなるよ。
+//速度の許容範囲（velocity.y / velocity.x）を広げる少しでも動いていたらセーフだったのを、しっかり止まっていないと即アウトにするように判定をシビアにできるよ。
+//一番手っ取り早く厳しくするなら、OVER_LINE_Y = 70; の数字を 90 くらいに上げて、中の 1000 を 500 に短縮するのがおすすめ！
+
+const OVER_LINE_Y = 90;
 
 function initGame() {
 if (render) {
@@ -649,6 +655,10 @@ const elapsed = (Date.now() - startTime) / 1000;
 document.getElementById('timer-display').innerText = elapsed.toFixed(1) + '秒';
 }
 
+
+
+
+
 function drawCustomElements() {
 const context = render.context;
 
@@ -699,12 +709,16 @@ return;
 }
 }
 
+
+
+//滞留時間（spawnTime の比較）を短くするいまは 1000（1秒間）止まっていたらアウトだけど、ここを 500（0.5秒）などに縮めると、天井付近でモタモタしているときの猶予がなくなって厳しくなるよ。
+
 if (!isGameEnd && isGameStarted) {
 for (let i = 0; i < bodies.length; i++) {
 const body = bodies[i];
 if (body.customLabel && !body.isStatic) {
 if (body.position.y < OVER_LINE_Y && 
-(Date.now() - body.spawnTime > 1000) && 
+(Date.now() - body.spawnTime > 500) && 
 Math.abs(body.velocity.y) < 0.8 && 
 Math.abs(body.velocity.x) < 0.8) {
 triggerGameOver();
