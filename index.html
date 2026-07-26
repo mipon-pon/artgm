@@ -3,7 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>アレサゲーム</title>
+    <title>アレサゲーム-ARETHA Word Puzzle</title>
+    <meta name="description" content="ARETHAの文字を作って遊ぶ某スイカゲームパズルゲームだよ(非公認)">
+    <meta property="og:title" content="アレサゲーム-ARETHA Word Puzzle">
+    <meta property="og:description" content="ARETHAの文字を作って遊ぶ某スイカゲームパズルゲームだよ(非公認)">
+    <meta property="og:image" content="https://mipon-pon.github.io/artgm/ogp.png">
+    <meta property="og:url" content="https://mipon-pon.github.io/artgm/">
+    <meta name="twitter:card" content="summary_large_image">
+
     <style>
         @font-face {
             font-family: 'ArethaCustom';
@@ -38,6 +45,9 @@
             margin: 2px 0;
             font-size: 22px;
             letter-spacing: 2px;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
         }
         .font-a {
             font-family: 'ArethaCustom', sans-serif;
@@ -86,13 +96,19 @@
             font-size: 13px;
             color: #aaa;
         }
+        .footer-note {
+            margin-top: 4px;
+            font-size: 11px;
+            color: #666;
+            letter-spacing: 0.5px;
+        }
         #clear-screen, #gameover-screen {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(0, 0, 0, 0);
             display: none;
             flex-direction: column;
             align-items: center;
@@ -102,6 +118,19 @@
             box-sizing: border-box;
             text-align: center;
             touch-action: auto;
+            transition: background 1.2s ease;
+        }
+        #clear-screen.show, #gameover-screen.show {
+            background: rgba(0, 0, 0, 0.9);
+        }
+        #clear-congrats, #clear-logo, #clear-time, #clear-praise, #clear-btn {
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        #clear-screen.show div, #clear-screen.show button {
+            opacity: 1;
+            transform: translateY(0);
         }
         #clear-congrats {
             font-size: 13px;
@@ -109,23 +138,30 @@
             letter-spacing: 1px;
             margin-bottom: 8px;
             font-weight: bold;
+            transition-delay: 0.2s;
         }
         #clear-logo {
             font-size: 38px;
             font-weight: bold;
             letter-spacing: 2px;
             margin-bottom: 8px;
+            transition-delay: 0.4s;
         }
         #clear-time {
             font-size: 18px;
             color: #6dd5ed;
             margin-bottom: 8px;
+            transition-delay: 0.6s;
         }
         #clear-praise {
             font-size: 14px;
             color: #ffde59;
             margin-bottom: 18px;
             line-height: 1.3;
+            transition-delay: 0.8s;
+        }
+        #clear-btn {
+            transition-delay: 1.0s;
         }
         #gameover-screen h2 {
             font-size: 36px;
@@ -151,7 +187,7 @@
 </head>
 <body>
 
-    <h1 class="metallic-text">ArethA PuzzlE</h1>
+    <h1 id="game-title" class="metallic-text">ArethA PuzzlE</h1>
     <div id="info-bar">
         <div id="next-container">
             <span>NEXT:</span>
@@ -173,7 +209,7 @@
         </div>
     </div>
     <div class="instruction">上から文字を落として<span class="font-a">ArethA</span>を完成させよう！</div>
-
+    <div class="footer-note">&copy; 2026 みぽん (Unofficial Fan Game)</div>
     <script>
         const { Engine, Render, Runner, Bodies, Composite, Events } = Matter;
 
@@ -186,14 +222,15 @@
         let startTime = 0;
         let timerInterval = null;
         let finalTimeSec = 0;
+        let clearAnimTimer = 0;
 
         const levels = [
-            { label: 'A',     radius: 19 },
-            { label: 'Ar',    radius: 26 },
-            { label: 'Are',   radius: 33 },
-            { label: 'Aret',  radius: 41 },
-            { label: 'Areth', radius: 49 },
-            { label: 'ArethA',radius: 58 }
+            { label: 'A',     radius: 17 },
+            { label: 'Ar',    radius: 24 },
+            { label: 'Are',   radius: 30 },
+            { label: 'Aret',  radius: 38 },
+            { label: 'Areth', radius: 46 },
+            { label: 'ArethA',radius: 54 }
         ];
 
         let currentNextLevel = getRandomStartLevel();
@@ -215,6 +252,7 @@
             world = engine.world;
             isGameEnd = false;
             isGameStarted = false;
+            clearAnimTimer = 0;
             clearInterval(timerInterval);
             document.getElementById('timer-display').innerText = '00.0秒';
 
@@ -260,11 +298,26 @@
             const context = render.context;
 
             context.save();
-            context.font = 'bold 42px "ArethaCustom", sans-serif';
-            context.fillStyle = 'rgba(255, 255, 255, 0.04)';
-            context.textAlign = 'center';
-            context.textBaseline = 'middle';
-            context.fillText('ArethA', width / 2, 260);
+            if (isGameEnd && clearAnimTimer > 0) {
+                const alpha = Math.min(1, (Date.now() - clearAnimTimer) / 600);
+                const scaleFactor = 1 + Math.sin((Date.now() - clearAnimTimer) * 0.008) * 0.05;
+                
+                context.translate(width / 2, 260);
+                context.scale(scaleFactor, scaleFactor);
+                context.font = 'bold 46px "ArethaCustom", sans-serif';
+                context.fillStyle = `rgba(255, 222, 89, ${0.15 + alpha * 0.4})`;
+                context.textAlign = 'center';
+                context.textBaseline = 'middle';
+                context.shadowColor = '#ffde59';
+                context.shadowBlur = 20 * alpha;
+                context.fillText('ArethA', 0, 0);
+            } else {
+                context.font = 'bold 42px "ArethaCustom", sans-serif';
+                context.fillStyle = 'rgba(255, 255, 255, 0.04)';
+                context.textAlign = 'center';
+                context.textBaseline = 'middle';
+                context.fillText('ArethA', width / 2, 260);
+            }
             context.restore();
 
             context.strokeStyle = 'rgba(255, 255, 255, 0.3)';
@@ -397,10 +450,16 @@
             isGameEnd = true;
             clearInterval(timerInterval);
             finalTimeSec = ((Date.now() - startTime) / 1000).toFixed(1);
+            clearAnimTimer = Date.now();
 
             document.getElementById('clear-time').innerText = `タイム: ${finalTimeSec}秒`;
             document.getElementById('clear-praise').innerText = getPraiseMessage(finalTimeSec);
-            document.getElementById('clear-screen').style.display = 'flex';
+            
+            const clearScreen = document.getElementById('clear-screen');
+            clearScreen.style.display = 'flex';
+            setTimeout(() => {
+                clearScreen.classList.add('show');
+            }, 50);
 
             Engine.clear(engine);
             Runner.stop(runner);
@@ -409,23 +468,37 @@
         function triggerGameOver() {
             isGameEnd = true;
             clearInterval(timerInterval);
-            document.getElementById('gameover-screen').style.display = 'flex';
+            const goScreen = document.getElementById('gameover-screen');
+            goScreen.style.display = 'flex';
+            setTimeout(() => {
+                goScreen.classList.add('show');
+            }, 50);
             Engine.clear(engine);
             Runner.stop(runner);
         }
 
         function restartGame(e) {
             if (e) e.stopPropagation();
-            document.getElementById('clear-screen').style.display = 'none';
-            document.getElementById('gameover-screen').style.display = 'none';
-            initGame();
+            const clearScreen = document.getElementById('clear-screen');
+            const goScreen = document.getElementById('gameover-screen');
+            clearScreen.classList.remove('show');
+            goScreen.classList.remove('show');
+            setTimeout(() => {
+                clearScreen.style.display = 'none';
+                goScreen.style.display = 'none';
+                initGame();
+            }, 300);
         }
 
-        // ボタンのイベント設定
+        // ボタン＆タイトルクリックのイベント設定
         document.getElementById('clear-btn').addEventListener('click', restartGame);
         document.getElementById('clear-btn').addEventListener('touchend', (e) => { e.preventDefault(); restartGame(e); });
         document.getElementById('gameover-btn').addEventListener('click', restartGame);
         document.getElementById('gameover-btn').addEventListener('touchend', (e) => { e.preventDefault(); restartGame(e); });
+        
+        const titleEl = document.getElementById('game-title');
+        titleEl.addEventListener('click', restartGame);
+        titleEl.addEventListener('touchend', (e) => { e.preventDefault(); restartGame(e); });
 
         let canDrop = true;
         function handleDrop(clientX) {
