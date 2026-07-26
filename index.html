@@ -1,1118 +1,1089 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>アレサゲーム-ARETHA Word Puzzle</title>
-    <meta name="description" content="ARETHAの文字を作って遊ぶ某スイカゲームパズルゲームだよ(非公認)">
-    <meta property="og:title" content="アレサゲーム-ARETHA Word Puzzle">
-    <meta property="og:description" content="ARETHAの文字を作って遊ぶ某スイカゲームパズルゲームだよ(非公認)">
-    <meta property="og:image" content="https://mipon-pon.github.io/artgm/OGP.png">
-    <meta property="og:url" content="https://mipon-pon.github.io/artgm/">
-    <meta name="twitter:card" content="summary_large_image">
-    <!-- ファビコンの設定 -->
-    <link rel="icon" type="image/png" href="favicon.png">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>アレサゲーム-ARETHA Word Puzzle</title>
+<meta name="description" content="ARETHAの文字を作って遊ぶ某スイカゲームパズルゲームだよ(非公認)">
+<meta property="og:title" content="アレサゲーム-ARETHA Word Puzzle">
+<meta property="og:description" content="ARETHAの文字を作って遊ぶ某スイカゲームパズルゲームだよ(非公認)">
+<meta property="og:image" content="https://mipon-pon.github.io/artgm/OGP.png">
+<meta property="og:url" content="https://mipon-pon.github.io/artgm/">
+<meta name="twitter:card" content="summary_large_image">
+<!-- ファビコンの設定 -->
+<link rel="icon" type="image/png" href="favicon.png">
 
 <style>
-        @font-face {
-            font-family: 'ArethaCustom';
-            src: url('A-RETHA-light.ttf') format('truetype');
-        }
+@font-face {font-family: 'ArethaCustom'; src: url('A-RETHA-light.ttf') format('truetype');}
 
-        body {
-            margin: 0;
-            padding: 0;
-            background: #1a1a2e;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            color: #fff;
-            font-family: sans-serif;
-            overflow: hidden;
-            touch-action: none;
-        }
+body {
+margin: 0;
+padding: 0;
+background: #1a1a2e;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+height: 100vh;
+color: #fff;
+font-family: sans-serif;
+overflow: hidden;
+touch-action: none;}
 
-        .metallic-text {
-            font-family: 'ArethaCustom', sans-serif;
-            background: linear-gradient(to bottom, #2980b9 0%, #6dd5ed 30%, #ffffff 50%, #3498db 70%, #1b4f72 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(1px 1px 0px #111) drop-shadow(-1px -1px 0px #111);
-            margin-bottom: 8px;
-        }
+.metallic-text {
+font-family: 'ArethaCustom', sans-serif;
+background: linear-gradient(to bottom, #2980b9 0%, #6dd5ed 30%, #ffffff 50%, #3498db 70%, #1b4f72 100%);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+filter: drop-shadow(1px 1px 0px #111) drop-shadow(-1px -1px 0px #111);
+margin-bottom: 8px;
+}
 
-        h1 {
-            margin: 2px 0;
-            font-size: 30px;
-            letter-spacing: 2px;
-            cursor: pointer;
-            -webkit-tap-highlight-color: transparent;
-            user-select: none;
-        }
+h1 {
+margin: 2px 0;
+font-size: 30px;
+letter-spacing: 2px;
+cursor: pointer;
+-webkit-tap-highlight-color: transparent;
+user-select: none;
+}
 
-        .font-a {
-            font-family: 'ArethaCustom', sans-serif;
-        }
+.font-a {font-family: 'ArethaCustom', sans-serif;}
 
-        #info-bar {
-            width: 320px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 13px;
-            margin-bottom: 3px;
-            color: #aaa;
-            padding: 0 5px;
-            box-sizing: border-box;
-        }
+#info-bar {
+width: 320px;
+display: flex;
+justify-content: space-between;
+align-items: center;
+font-size: 13px;
+margin-bottom: 3px;
+color: #aaa;
+padding: 0 5px;
+box-sizing: border-box;
+}
 
-        #next-container {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
+#next-container {
+display: flex;
+align-items: center;
+gap: 6px;
+}
 
-        #next-preview {
-            font-weight: bold;
-            font-size: 16px;
-        }
+#next-preview {
+font-weight: bold;
+font-size: 16px;
+}
 
-        #timer-display {
-            font-family: monospace;
-            font-size: 15px;
-            color: #6dd5ed;
-        }
+#timer-display {
+font-family: monospace;
+font-size: 15px;
+color: #6dd5ed;
+}
 
-        #game-container {
-            position: relative;
-            width: 320px;
-            height: 460px;
-            background: #16213e;
-            border: 3px solid #0f3460;
-            border-radius: 10px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
-            overflow: hidden;
-            cursor: pointer;
-        }
+#game-container {
+position: relative;
+width: 320px;
+height: 460px;
+background: #16213e;
+border: 3px solid #0f3460;
+border-radius: 10px;
+box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+overflow: hidden;
+cursor: pointer;
+}
 
-        canvas {
-            display: block;
-        }
+canvas {display: block;}
 
-        .instruction {
-            margin-top: 6px;
-            font-size: 10px;
-            color: #aaa;
-            text-align: center;
-        }
+.instruction {
+margin-top: 6px;
+font-size: 10px;
+color: #aaa;
+text-align: center;
+}
 
-        .footer-note {
-            margin-top: 4px;
-            font-size: 11px;
-            color: #666;
-            letter-spacing: 0.5px;
-        }
+.footer-note {
+margin-top: 4px;
+font-size: 11px;
+color: #666;
+letter-spacing: 0.5px;
+}
 
-        /* --- フッターリンク（2行・中央寄せ） --- */
-        .footer-links {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-            margin: 12px 0;
-            font-size: 11px;
-        }
+/* --- フッターリンク（2行・中央寄せ） --- */
+.footer-links {
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 6px;
+margin: 12px 0;
+font-size: 11px;
+}
 
-        .footer-row {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            width: 100%;
-        }
+.footer-row {
+display: flex;
+justify-content: center;
+gap: 15px;
+width: 100%;
+}
 
-        .footer-links span {
-            color: #8888aa;
-            cursor: pointer;
-            transition: color 0.2s;
-            user-select: none;
-        }
+.footer-links span {
+color: #8888aa;
+cursor: pointer;
+transition: color 0.2s;
+user-select: none;
+}
 
-        .footer-links span:hover {
-            color: #ffde59;
-        }
+.footer-links span:hover {color: #ffde59;}
 
-        /* --- モーダルウィンドウ共通（アップデート履歴用） --- */
-        .modal-screen {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
+/* --- モーダルウィンドウ共通（アップデート履歴用） --- */
+.modal-screen {
+display: none;
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: rgba(0, 0, 0, 0.7);
+z-index: 1000;
+justify-content: center;
+align-items: center;
+}
 
-        .modal-screen.active {
-            display: flex;
-        }
+.modal-screen.active {display: flex;}
 
-        .modal-content {
-            width: 280px;
-            background: #16213e;
-            border: 2px solid #ffde59;
-            border-radius: 14px;
-            padding: 20px;
-            box-sizing: border-box;
-            color: #fff;
-            text-align: center;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
-            font-family: sans-serif;
-        }
+.modal-content {
+width: 280px;
+background: #16213e;
+border: 2px solid #ffde59;
+border-radius: 14px;
+padding: 20px;
+box-sizing: border-box;
+color: #fff;
+text-align: center;
+box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+font-family: sans-serif;
+}
 
-        .modal-content h2 {
-            margin: 0 0 12px 0;
-            font-size: 15px;
-            color: #ffde59;
-            letter-spacing: 1px;
-        }
+.modal-content h2 {
+margin: 0 0 12px 0;
+font-size: 15px;
+color: #ffde59;
+letter-spacing: 1px;
+}
 
-        /* 履歴スクロールエリア */
-        .update-log-scroll {
-            max-height: 180px;
-            overflow-y: auto;
-            text-align: left;
-            padding-right: 5px;
-            margin-bottom: 0;
-        }
+/* 履歴スクロールエリア */
+.update-log-scroll {
+max-height: 180px;
+overflow-y: auto;
+text-align: left;
+padding-right: 5px;
+margin-bottom: 0;
+}
 
-        .update-log-scroll::-webkit-scrollbar {
-            width: 4px;
-        }
+.update-log-scroll::-webkit-scrollbar {width: 4px;}
 
-        .update-log-scroll::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 2px;
-        }
+.update-log-scroll::-webkit-scrollbar-thumb {
+background: rgba(255, 255, 255, 0.3);
+border-radius: 2px;
+}
 
-        .update-item {
-            font-size: 11px;
-            line-height: 1.4;
-            margin-bottom: 8px;
-            border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
-            padding-bottom: 6px;
-        }
+.update-item {
+font-size: 11px;
+line-height: 1.4;
+margin-bottom: 8px;
+border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+padding-bottom: 6px;
+}
 
-        .update-date {
-            color: #ff9f43;
-            font-weight: bold;
-            margin-right: 6px;
-        }
+.update-date {
+color: #ff9f43;
+font-weight: bold;
+margin-right: 6px;
+}
 
-        .update-text {
-            color: #dcdde1;
-        }
+.update-text {color: #dcdde1;
+}
 
-        /* モーダル内の下部「とじる」ボタン */
-        /* 閉じる（×）ボタン共通（右上に配置） */
-        /* --- OP/EDなどの右上に配置する × ボタン --- */
-        .modal-close-btn {
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            font-size: 40px;
-            color: #fff;
-            background: none;
-            border: none;
-            cursor: pointer;
-            z-index: 105;
-            padding: 10px;
-            line-height: 1;
-            -webkit-tap-highlight-color: transparent;
-        }
-        .modal-close-btn:hover {
-            color: #e94560;
-        }
+/* モーダル内の下部「とじる」ボタン */
+/* 閉じる（×）ボタン共通（右上に配置） */
+/* --- OP/EDなどの右上に配置する × ボタン --- */
+.modal-close-btn {
+position: absolute;
+top: 10px;
+right: 15px;
+font-size: 40px;
+color: #fff;
+background: none;
+border: none;
+cursor: pointer;
+z-index: 105;
+padding: 10px;
+line-height: 1;
+-webkit-tap-highlight-color: transparent;
+}
+.modal-close-btn:hover {
+color: #e94560;
+}
 
-        /* --- アップデート履歴モーダル内の「とじる」ボタン --- */
-        .update-close-btn {
-            display: block;
-            width: 100%;
-            margin-top: 15px;
-            background: #0f3460;
-            color: #ffde59;
-            border: 1px solid #ffde59;
-            padding: 9px 0;
-            border-radius: 20px;
-            font-weight: bold;
-            cursor: pointer;
-            font-size: 12px;
-            box-sizing: border-box;
-            transition: background 0.2s, color 0.2s;
-        }
-        .update-close-btn:hover {
-            background: #ffde59;
-            color: #16213e;
-        }
+/* --- アップデート履歴モーダル内の「とじる」ボタン --- */
+.update-close-btn {
+display: block;
+width: 100%;
+margin-top: 15px;
+background: #0f3460;
+color: #ffde59;
+border: 1px solid #ffde59;
+padding: 9px 0;
+border-radius: 20px;
+font-weight: bold;
+cursor: pointer;
+font-size: 12px;
+box-sizing: border-box;
+transition: background 0.2s, color 0.2s;
+}
+.update-close-btn:hover {
+background: #ffde59;
+color: #16213e;
+}
 
-        /* --- スターウォーズ風エンディング & オープニング等の演出用 --- */
-        .modal-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.92);
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
-            padding: 20px;
-            box-sizing: border-box;
-            text-align: center;
-        }
+/* --- スターウォーズ風エンディング & オープニング等の演出用 --- */
+.modal-overlay {
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: rgba(0, 0, 0, 0.92);
+display: none;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+z-index: 100;
+padding: 20px;
+box-sizing: border-box;
+text-align: center;
+}
 
-        #ending-screen {
-            overflow: hidden;
-            background: #000;
-        }
+#ending-screen {overflow: hidden; background: #000;}
 
-        #ending-screen.active {
-            display: flex;
-        }
+#ending-screen.active {display: flex;}
 
-        #ending-screen.active .sw-content {
-            animation: crawl 20s linear infinite;
-        }
+#ending-screen.active .sw-content {animation: crawl 20s linear infinite;}
 
-        .sw-fade {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(0deg, transparent 80%, rgba(0,0,0,1) 100%);
-            z-index: 102;
-            pointer-events: none;
-        }
+.sw-fade {
+position: absolute;
+top: 0; left: 0; width: 100%; height: 100%;
+background: linear-gradient(0deg, transparent 80%, rgba(0,0,0,1) 100%);
+z-index: 102;
+pointer-events: none;
+}
 
-        .sw-content {
-            position: absolute;
-            width: 80%;
-            top: 100%;
-            color: #ffde59;
-            font-weight: bold;
-            font-size: 14px;
-            line-height: 1.8;
-            text-align: center;
-        }
+.sw-content {
+position: absolute;
+width: 80%;
+top: 100%;
+color: #ffde59;
+font-weight: bold;
+font-size: 14px;
+line-height: 1.8;
+text-align: center;
+}
 
-        @keyframes crawl {
-            0% { transform: translateY(0); opacity: 1; }
-            100% { transform: translateY(-900px); opacity: 0.2; }
-        }
+@keyframes crawl {
+0% { transform: translateY(0); opacity: 1; }
+100% { transform: translateY(-900px); opacity: 0.2; }
+}
 
-        .sw-skip-msg {
-            position: absolute;
-            bottom: 15px;
-            width: 100%;
-            font-size: 10px;
-            color: #888;
-            z-index: 103;
-            animation: blink 1.5s infinite;
-            pointer-events: none;
-        }
+.sw-skip-msg {
+position: absolute;
+bottom: 15px;
+width: 100%;
+font-size: 10px;
+color: #888;
+z-index: 103;
+animation: blink 1.5s infinite;
+pointer-events: none;
+}
 
-        @keyframes blink { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+@keyframes blink { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
 
-        /* クリア画面・ゲームオーバー画面 */
-        #clear-screen, #gameover-screen {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0);
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 10;
-            padding: 15px;
-            box-sizing: border-box;
-            text-align: center;
-            touch-action: auto;
-            transition: background 1.2s ease;
-        }
+/* クリア画面・ゲームオーバー画面 */
+#clear-screen, #gameover-screen {
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: rgba(0, 0, 0, 0);
+display: none;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+z-index: 10;
+padding: 15px;
+box-sizing: border-box;
+text-align: center;
+touch-action: auto;
+transition: background 1.2s ease;
+}
 
-        #clear-screen.show, #gameover-screen.show {
-            background: rgba(0, 0, 0, 0.9);
-        }
+#clear-screen.show, #gameover-screen.show {background: rgba(0, 0, 0, 0.9);}
 
-        #clear-congrats, #clear-logo, #clear-time, #clear-praise, #clear-btn {
-            opacity: 0;
-            transform: translateY(10px);
-            transition: opacity 0.8s ease, transform 0.8s ease;
-        }
+#clear-congrats, #clear-logo, #clear-time, #clear-praise, #clear-btn {
+opacity: 0;
+transform: translateY(10px);
+transition: opacity 0.8s ease, transform 0.8s ease;
+}
 
-        #clear-screen.show div, #clear-screen.show button {
-            opacity: 1;
-            transform: translateY(0);
-        }
+#clear-screen.show div, #clear-screen.show button {opacity: 1; transform: translateY(0);}
 
-        #clear-congrats {
-            font-size: 13px;
-            color: #ffde59;
-            letter-spacing: 1px;
-            margin-bottom: 6px;
-            font-weight: bold;
-            transition-delay: 0.2s;
-        }
+#clear-congrats {
+font-size: 13px;
+color: #ffde59;
+letter-spacing: 1px;
+margin-bottom: 6px;
+font-weight: bold;
+transition-delay: 0.2s;
+}
 
-        #clear-logo {
-            font-size: 38px;
-            font-weight: bold;
-            letter-spacing: 2px;
-            margin-bottom: 6px;
-            transition-delay: 0.4s;
-        }
+#clear-logo {
+font-size: 38px;
+font-weight: bold;
+letter-spacing: 2px;
+margin-bottom: 6px;
+transition-delay: 0.4s;
+}
 
-        #clear-time {
-            font-size: 17px;
-            color: #6dd5ed;
-            margin-bottom: 6px;
-            transition-delay: 0.6s;
-        }
+#clear-time {
+font-size: 17px;
+color: #6dd5ed;
+margin-bottom: 6px;
+transition-delay: 0.6s;
+}
 
-        #clear-praise {
-            font-size: 13px;
-            color: #ffde59;
-            margin-bottom: 14px;
-            line-height: 1.4;
-            transition-delay: 0.8s;
-        }
+#clear-praise {
+font-size: 13px;
+color: #ffde59;
+margin-bottom: 14px;
+line-height: 1.4;
+transition-delay: 0.8s;
+}
 
-        #clear-btn {
-            transition-delay: 1.0s;
-        }
+#clear-btn {transition-delay: 1.0s;}
 
-        #gameover-screen h2 {
-            font-size: 36px;
-            color: #fff;
-            margin-bottom: 20px;
-            font-family: 'ArethaCustom', sans-serif;
-        }
+#gameover-screen h2 {
+font-size: 36px;
+color: #fff;
+margin-bottom: 20px;
+font-family: 'ArethaCustom', sans-serif;
+}
 
-        .btn {
-            padding: 10px 22px;
-            font-size: 15px;
-            background: #e94560;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            z-index: 20;
-            -webkit-tap-highlight-color: transparent;
-        }
+.btn {
+padding: 10px 22px;
+font-size: 15px;
+background: #e94560;
+color: white;
+border: none;
+border-radius: 5px;
+cursor: pointer;
+font-weight: bold;
+z-index: 20;
+-webkit-tap-highlight-color: transparent;
+}
 
-        /* オープニング画面用スタイル */
-        #opening-screen {
-            background: #000;
-            overflow: hidden;
-            z-index: 105;
-        }
+/* オープニング画面用スタイル */
+#opening-screen {
+background: #000;
+overflow: hidden;
+z-index: 105;
+}
 
-        #op-flowing-text {
-            position: absolute;
-            white-space: nowrap;
-            font-family: 'ArethaCustom', sans-serif;
-            font-size: 110px;
-            font-weight: bold;
-            background: linear-gradient(to bottom, #777 0%, #ccc 30%, #ffffff 50%, #888 70%, #333 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(4px 4px 0px #000);
-            left: 100%;
-            top: 50%;
-            transform: translateY(-50%);
-        }
+#op-flowing-text {
+position: absolute;
+white-space: nowrap;
+font-family: 'ArethaCustom', sans-serif;
+font-size: 110px;
+font-weight: bold;
+background: linear-gradient(to bottom, #777 0%, #ccc 30%, #ffffff 50%, #888 70%, #333 100%);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+filter: drop-shadow(4px 4px 0px #000);
+left: 100%;
+top: 50%;
+transform: translateY(-50%);
+}
 
-        #op-center-logo {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(1);
-            font-family: 'ArethaCustom', sans-serif;
-            font-size: 32px;
-            font-weight: bold;
-            background: linear-gradient(to bottom, #2980b9 0%, #6dd5ed 30%, #ffffff 50%, #3498db 70%, #1b4f72 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(2px 2px 0px #111) drop-shadow(-2px -2px 0px #111);
-            display: none;
-            white-space: nowrap;
-        }
+#op-center-logo {
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%) scale(1);
+font-family: 'ArethaCustom', sans-serif;
+font-size: 32px;
+font-weight: bold;
+background: linear-gradient(to bottom, #2980b9 0%, #6dd5ed 30%, #ffffff 50%, #3498db 70%, #1b4f72 100%);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+filter: drop-shadow(2px 2px 0px #111) drop-shadow(-2px -2px 0px #111);
+display: none;
+white-space: nowrap;
+}
 </style>
 
-    <!-- Matter.js 物理演算ライブラリ -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+<!-- Matter.js 物理演算ライブラリ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
 </head>
 
 
 
 <body>
-    <h1 id="game-title" class="metallic-text">ArethA PuzzlE</h1>
+<h1 id="game-title" class="metallic-text">ArethA PuzzlE</h1>
 
-    <div id="info-bar">
-        <div id="next-container">
-            <span>NEXT→</span>
-            <span id="next-preview" class="metallic-text">A</span>
-        </div>
-        <div style="display: flex; align-items: center; gap: 10px;">
-            <div id="timer-display">00.0秒</div>
-            <button id="reset-btn" style="padding: 2px 8px; font-size: 11px; background: #e94560; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">リセット</button>
-        </div>
-    </div>
+<div id="info-bar">
+<div id="next-container">
+<span>NEXT→</span>
+<span id="next-preview" class="metallic-text">A</span>
+</div>
+<div style="display: flex; align-items: center; gap: 10px;">
+<div id="timer-display">00.0秒</div>
+<button id="reset-btn" style="padding: 2px 8px; font-size: 11px; background: #e94560; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">リセット</button>
+</div>
+</div>
 
-    <div id="game-container">
-        <div id="clear-screen">
-            <div id="clear-congrats">＼Congratulations／</div>
-            <div id="clear-logo" class="metallic-text">ArethA</div>
-            <div id="clear-time">[タイム] 00.0秒</div>
-            <div id="clear-praise">ここにクリアクラスが入るよ</div>
-            <button class="btn" id="clear-btn">もう一度遊ぶ</button>
-        </div>
-        <div id="gameover-screen">
-            <h2>GAME OVER</h2>
-            <button class="btn" id="gameover-btn">もう一度遊ぶ</button>
-        </div>
+<div id="game-container">
+<div id="clear-screen">
+<div id="clear-congrats">＼Congratulations／</div>
+<div id="clear-logo" class="metallic-text">ArethA</div>
+<div id="clear-time">[タイム] 00.0秒</div>
+<div id="clear-praise">ここにクリアクラスが入るよ</div>
+<button class="btn" id="clear-btn">もう一度遊ぶ</button>
+</div>
+<div id="gameover-screen">
+<h2>GAME OVER</h2>
+<button class="btn" id="gameover-btn">もう一度遊ぶ</button>
+</div>
 
-        <!-- オープニングモーダル -->
-        <div id="opening-screen" class="modal-overlay">
-            <button class="modal-close-btn" id="op-close-btn">&times;</button>
-            <div id="op-flowing-text">ArethA PuzzlE</div>
-            <div id="op-center-logo">アレサゲーム</div>
-            <div class="sw-skip-msg" style="bottom:15px;">※右上の×をクリックで閉じます</div>
-        </div>
+<!-- オープニングモーダル -->
+<div id="opening-screen" class="modal-overlay">
+<button class="modal-close-btn" id="op-close-btn">&times;</button>
+<div id="op-flowing-text">ArethA PuzzlE</div>
+<div id="op-center-logo">アレサゲーム</div>
+<div class="sw-skip-msg" style="bottom:15px;">※右上の×をクリックで閉じます</div>
+</div>
 
-        <!-- スターウォーズ風エンディングモーダル -->
-        <div id="ending-screen" class="modal-overlay">
-            <button class="modal-close-btn" id="ed-close-btn">&times;</button>
-            <div class="sw-fade"></div>
-            <div class="sw-content">
-                【制作後記】<br><br>
-				ゲーム作り、ムズい！<br>
-				たのしい！ムズい！たのしい！<br><br>
+<!-- スターウォーズ風エンディングモーダル -->
+<div id="ending-screen" class="modal-overlay">
+<button class="modal-close-btn" id="ed-close-btn">&times;</button>
+<div class="sw-fade"></div>
+<div class="sw-content">
+【制作後記】<br><br>
+ゲーム作り、ムズい！<br>
+たのしい！ムズい！たのしい！<br><br>
 
-				AI、ありがとう！ありがとう、AI！<br>
-				ゲームが作れたよ！すごいね！<br><br>
+AI、ありがとう！ありがとう、AI！<br>
+ゲームが作れたよ！すごいね！<br><br>
 
-				「<span class="font-a">ArethA</span>」ってロゴが好きで好きで<br>
-				長年、ずっと崇拝してて<br>
-				それを何かで表せたらなぁって思ったら<br>こうなったよ
-				ドウシテコウナッタ？<br><br>
+「<span class="font-a">ArethA</span>」ってロゴが好きで好きで<br>
+長年、ずっと崇拝してて<br>
+それを何かで表せたらなぁって思ったら<br>こうなったよ
+ドウシテコウナッタ？<br><br>
 
-				ジャマ文字いれたら<br>急に楽しくなった！<br>
-				Tじゃなくて、Jだよ！マギラワシイ！<br>
-				ジャマだねぇ困っちゃうねぇ<br><br>
+ジャマ文字いれたら<br>急に楽しくなった！<br>
+Tじゃなくて、Jだよ！マギラワシイ！<br>
+ジャマだねぇ困っちゃうねぇ<br><br>
 
-                まあ、その、あれ、さ。<br>
-                遊んでくれて本当にありがとうねー！<br><br>
-                — 完 —
-            </div>
-            <div class="sw-skip-msg">※右上の×をクリックで閉じます</div>
-        </div>
-    </div>
+まあ、その、あれ、さ。<br>
+遊んでくれて本当にありがとうねー！<br><br>
+— 完 —
+</div>
+<div class="sw-skip-msg">※右上の×をクリックで閉じます</div>
+</div>
+</div>
 
-    <!-- foot set -->
-    <div class="instruction">上から文字を落として<span class="font-a">ArethA</span>を完成させよう！<br>文字が-------を超えるとGAME OVER<br>♥文字の当たり判定ヘンなのは許して♥</div>
+<!-- foot set -->
+<div class="instruction">上から文字を落として<span class="font-a">ArethA</span>を完成させよう！<br>文字が-------を超えるとGAME OVER<br>♥文字の当たり判定ヘンなのは許して♥</div>
 
-    <div class="footer-note">&copy; 2026 みぽん (Unofficial Fan Game)</div>
+<div class="footer-note">&copy; 2026 みぽん (Unofficial Fan Game)</div>
 
 <div class="footer-links">
-        <div class="footer-row">
-            <span id="btn-op">[見なくてもいいOP]</span>
-            <span id="btn-ed">[どうでもいいエンディング]</span>
-        </div>
-        <div class="footer-row">
-            <span id="btn-update">[UPDATE 履歴]</span>
-        </div>
-    </div>
+<div class="footer-row">
+<span id="btn-op">[見なくてもいいOP]</span>
+<span id="btn-ed">[どうでもいいエンディング]</span>
+</div>
+<div class="footer-row">
+<span id="btn-update">[UPDATE 履歴]</span>
+</div>
+</div>
 
 <!-- アップデート履歴 モーダルウィンドウ -->
-    <div id="update-modal" class="modal-screen">
-        <div class="modal-content">
-            <h2>📢 UPDATE 履歴 📢</h2>
-            <div class="update-log-scroll">
-                <div class="update-item">
-                    <span class="update-date">2026.07.27</span>
-                    <span class="update-text">【調整】リザルトの称号タイムバランスを大幅改修。スピード勢からじっくり勢まで楽しめるように調整！</span>
-                </div>
-                <div class="update-item">
-                    <span class="update-date">2026.7.27</span>
-                    <span class="update-text">【機能】NEXTプレビューでジャマが出たときに専用カラーで分かりやすく表示されるように改善。</span>
-                </div>
-                <div class="update-item">
-                    <span class="update-date">2026.07.27</span>
-                    <span class="update-text">【!NEW!】謎のジャマ文字「<span class="font-a" style="color:#ff9f43;">AREJHA</span>」が低確率で乱入するようになりました！合成できないよ！要注意！</span>
-                </div>
-                <div class="update-item">
-                    <span class="update-date">2026.07.26</span>
-                    <span class="update-text">【公開】オープニング＆エンディング実装！</span>
-                </div>
-                <div class="update-item">
-                    <span class="update-date">2026.07.26</span>
-                    <span class="update-text">【公開】アレサゲーム-ARETHA Word Puzzle リリース！</span>
-                </div>
-            </div>
+<div id="update-modal" class="modal-screen">
+<div class="modal-content">
+<h2>📢 UPDATE 履歴 📢</h2>
+<div class="update-log-scroll">
+<div class="update-item">
+<span class="update-date">2026.07.27</span>
+<span class="update-text">【調整】リザルトの称号タイムバランスを大幅改修。スピード勢からじっくり勢まで楽しめるように調整！</span>
+</div>
+<div class="update-item">
+<span class="update-date">2026.7.27</span>
+<span class="update-text">【機能】NEXTプレビューでジャマが出たときに専用カラーで分かりやすく表示されるように改善。</span>
+</div>
+<div class="update-item">
+<span class="update-date">2026.07.27</span>
+<span class="update-text">【!NEW!】謎のジャマ文字「<span class="font-a" style="color:#ff9f43;">AREJHA</span>」が低確率で乱入するようになりました！合成できないよ！要注意！</span>
+</div>
+<div class="update-item">
+<span class="update-date">2026.07.26</span>
+<span class="update-text">【公開】オープニング＆エンディング実装！</span>
+</div>
+<div class="update-item">
+<span class="update-date">2026.07.26</span>
+<span class="update-text">【公開】アレサゲーム-ARETHA Word Puzzle リリース！</span>
+</div>
+</div>
 <!-- アップデート履歴の「とじる」ボタン -->
-            <button id="update-close-btn" class="update-close-btn">とじる</button>
-        </div>
-    </div>
+<button id="update-close-btn" class="update-close-btn">とじる</button>
+</div>
+</div>
 <!-- アップデート履歴コーナー -->
 
 <!-- 以下、Javascript場所 -->
 <script>
-        const { Engine, Render, Runner, Bodies, Composite, Events } = Matter;
-        const width = 320;
-        const height = 460;
-        let engine, world, render, runner;
-        let isGameEnd = false;
-        let isGameStarted = false;
-        let startTime = 0;
-        let timerInterval = null;
-        let finalTimeSec = 0;
-        let clearAnimTimer = 0;
+const { Engine, Render, Runner, Bodies, Composite, Events } = Matter;
+const width = 320;
+const height = 460;
+let engine, world, render, runner;
+let isGameEnd = false;
+let isGameStarted = false;
+let startTime = 0;
+let timerInterval = null;
+let finalTimeSec = 0;
+let clearAnimTimer = 0;
 
-        const levels = [
-            { label: 'A',      radius: 20 },
-            { label: 'Ar',     radius: 38 },
-            { label: 'Are',    radius: 45 },
-            { label: 'Aret',   radius: 65 },
-            { label: 'Areth',  radius: 72 },
-            { label: 'ArethA', radius: 88 },
-            { label: 'ArejhA', radius: 48, isTrap: true } // ★ジャマを追加！
-        ];
+const levels = [
+{ label: 'A',	  radius: 20 },
+{ label: 'Ar',	 radius: 38 },
+{ label: 'Are',	radius: 45 },
+{ label: 'Aret',   radius: 65 },
+{ label: 'Areth',  radius: 72 },
+{ label: 'ArethA', radius: 88 },
+{ label: 'ArejhA', radius: 48, isTrap: true } // ★ジャマを追加！
+];
 
-        function getRandomStartLevel() {
-            const rand = Math.random();
-            if (rand < 0.50) return 0;       // A (50%)
-            else if (rand < 0.73) return 1;  // Ar (23%)
-            else if (rand < 0.85) return 2;  // Are (12%)
-            else if (rand < 0.92) return 3;  // Aret (7%)
-            else if (rand < 0.94) return 4;  // Areth (2%)
-            else return 6;                   // ★AREJHA (6%の確率で混入！)
-        }
+function getRandomStartLevel() {
+const rand = Math.random();
+if (rand < 0.50) return 0;	   // A (50%)
+else if (rand < 0.73) return 1;  // Ar (23%)
+else if (rand < 0.85) return 2;  // Are (12%)
+else if (rand < 0.92) return 3;  // Aret (7%)
+else if (rand < 0.94) return 4;  // Areth (2%)
+else return 6;				   // ★AREJHA (6%の確率で混入！)
+}
 
-        const OVER_LINE_Y = 70;
+const OVER_LINE_Y = 70;
 
-        function initGame() {
-            if (render) {
-                Render.stop(render);
-                Runner.stop(runner);
-                render.canvas.remove();
-            }
-            
-            engine = Engine.create();
-            engine.world.gravity.y = 1.2;
-            world = engine.world;
-            isGameEnd = false;
-            isGameStarted = false;
-            clearAnimTimer = 0;
-            clearInterval(timerInterval);
-            document.getElementById('timer-display').innerText = '00.0秒';
+function initGame() {
+if (render) {
+Render.stop(render);
+Runner.stop(runner);
+render.canvas.remove();
+}
 
-            currentNextLevel = getRandomStartLevel();
-            updateNextPreview();
+engine = Engine.create();
+engine.world.gravity.y = 1.2;
+world = engine.world;
+isGameEnd = false;
+isGameStarted = false;
+clearAnimTimer = 0;
+clearInterval(timerInterval);
+document.getElementById('timer-display').innerText = '00.0秒';
 
-            render = Render.create({
-                element: document.getElementById('game-container'),
-                engine: engine,
-                options: {
-                    width: width,
-                    height: height,
-                    wireframes: false,
-                    background: '#16213e'
-                }
-            });
+currentNextLevel = getRandomStartLevel();
+updateNextPreview();
 
-            Render.run(render);
-            runner = Runner.create();
-            Runner.run(runner, engine);
+render = Render.create({
+element: document.getElementById('game-container'),
+engine: engine,
+options: {
+width: width,
+height: height,
+wireframes: false,
+background: '#16213e'
+}
+});
 
-            const wallOptions = { isStatic: true, render: { fillStyle: '#0f3460' } };
-            const ground = Bodies.rectangle(width / 2, height + 20, width, 40, wallOptions);
-            const leftWall = Bodies.rectangle(-20, height / 2, 40, height, wallOptions);
-            const rightWall = Bodies.rectangle(width + 20, height / 2, 40, height, wallOptions);
-            Composite.add(world, [ground, leftWall, rightWall]);
+Render.run(render);
+runner = Runner.create();
+Runner.run(runner, engine);
 
-            Events.on(render, 'afterRender', drawCustomElements);
-            Events.on(engine, 'collisionStart', handleCollisions);
-        }
+const wallOptions = { isStatic: true, render: { fillStyle: '#0f3460' } };
+const ground = Bodies.rectangle(width / 2, height + 20, width, 40, wallOptions);
+const leftWall = Bodies.rectangle(-20, height / 2, 40, height, wallOptions);
+const rightWall = Bodies.rectangle(width + 20, height / 2, 40, height, wallOptions);
+Composite.add(world, [ground, leftWall, rightWall]);
 
-        let currentNextLevel = getRandomStartLevel();
+Events.on(render, 'afterRender', drawCustomElements);
+Events.on(engine, 'collisionStart', handleCollisions);
+}
+
+let currentNextLevel = getRandomStartLevel();
 
 function updateNextPreview() {
-            const previewEl = document.getElementById('next-preview');
-            const config = levels[currentNextLevel];
-            
-            // プレビューの文字をセット
-            previewEl.innerText = config.label;
-            
-            // ★ジャマ（AREJHA）のときはオレンジ・赤系に光らせる
-            if (config.isTrap) {
-                previewEl.style.color = '#ff9f43';
-                previewEl.style.textShadow = '0 0 8px #e74c3c';
-            } else {
-                previewEl.style.color = '#ffde59';
-                previewEl.style.textShadow = 'none';
-            }
-        }
+const previewEl = document.getElementById('next-preview');
+const config = levels[currentNextLevel];
 
-        function updateTimer() {
-            if (isGameEnd || !isGameStarted) return;
-            const elapsed = (Date.now() - startTime) / 1000;
-            document.getElementById('timer-display').innerText = elapsed.toFixed(1) + '秒';
-        }
+// プレビューの文字をセット
+previewEl.innerText = config.label;
 
-        function drawCustomElements() {
-            const context = render.context;
+// ★ジャマ（AREJHA）のときはオレンジ・赤系に光らせる
+if (config.isTrap) {
+previewEl.style.color = '#ff9f43';
+previewEl.style.textShadow = '0 0 8px #e74c3c';
+} else {
+previewEl.style.color = '#ffde59';
+previewEl.style.textShadow = 'none';
+}
+}
 
-            context.save();
-            if (isGameEnd && clearAnimTimer > 0) {
-                const alpha = Math.min(1, (Date.now() - clearAnimTimer) / 600);
-                const scaleFactor = 1 + Math.sin((Date.now() - clearAnimTimer) * 0.008) * 0.05;
-                
-                context.translate(width / 2, 260);
-                context.scale(scaleFactor, scaleFactor);
-                context.font = 'bold 46px "ArethaCustom", sans-serif';
-                context.fillStyle = `rgba(255, 222, 89, ${0.15 + alpha * 0.4})`;
-                context.textAlign = 'center';
-                context.textBaseline = 'middle';
-                context.shadowColor = '#ffde59';
-                context.shadowBlur = 20 * alpha;
-                context.fillText('ArethA', 0, 0);
-            } else {
-                context.font = 'bold 42px "ArethaCustom", sans-serif';
-                context.fillStyle = 'rgba(255, 255, 255, 0.04)';
-                context.textAlign = 'center';
-                context.textBaseline = 'middle';
-                context.fillText('ArethA', width / 2, 260);
-            }
-            context.restore();
+function updateTimer() {
+if (isGameEnd || !isGameStarted) return;
+const elapsed = (Date.now() - startTime) / 1000;
+document.getElementById('timer-display').innerText = elapsed.toFixed(1) + '秒';
+}
 
-            context.strokeStyle = 'rgba(255, 255, 255, 0.3)';
-            context.lineWidth = 2;
-            context.setLineDash([5, 5]);
-            context.beginPath();
-            context.moveTo(20, OVER_LINE_Y);
-            context.lineTo(width - 20, OVER_LINE_Y);
-            context.stroke();
-            context.setLineDash([]);
+function drawCustomElements() {
+const context = render.context;
 
-            const bodies = Composite.allBodies(world);
-            
-            if (!isGameEnd && isGameStarted) {
-                let arethaCount = 0;
-                for (let i = 0; i < bodies.length; i++) {
-                    if (bodies[i].level === levels.length - 2 && !bodies[i].isRemoved) {
-                        arethaCount++;
-                    }
-                }
-                if (arethaCount >= 1) {
-                    triggerGameClear();
-                    return;
-                }
-            }
+context.save();
+if (isGameEnd && clearAnimTimer > 0) {
+const alpha = Math.min(1, (Date.now() - clearAnimTimer) / 600);
+const scaleFactor = 1 + Math.sin((Date.now() - clearAnimTimer) * 0.008) * 0.05;
 
-            if (!isGameEnd && isGameStarted) {
-                for (let i = 0; i < bodies.length; i++) {
-                    const body = bodies[i];
-                    if (body.customLabel && !body.isStatic) {
-                        if (body.position.y < OVER_LINE_Y && 
-                            (Date.now() - body.spawnTime > 1000) && 
-                            Math.abs(body.velocity.y) < 0.8 && 
-                            Math.abs(body.velocity.x) < 0.8) {
-                            triggerGameOver();
-                            break;
-                        }
-                    }
-                }
-            }
+context.translate(width / 2, 260);
+context.scale(scaleFactor, scaleFactor);
+context.font = 'bold 46px "ArethaCustom", sans-serif';
+context.fillStyle = `rgba(255, 222, 89, ${0.15 + alpha * 0.4})`;
+context.textAlign = 'center';
+context.textBaseline = 'middle';
+context.shadowColor = '#ffde59';
+context.shadowBlur = 20 * alpha;
+context.fillText('ArethA', 0, 0);
+} else {
+context.font = 'bold 42px "ArethaCustom", sans-serif';
+context.fillStyle = 'rgba(255, 255, 255, 0.04)';
+context.textAlign = 'center';
+context.textBaseline = 'middle';
+context.fillText('ArethA', width / 2, 260);
+}
+context.restore();
 
-            for (let i = 0; i < bodies.length; i++) {
-                const body = bodies[i];
-                if (body.customLabel) {
-                    context.save();
-                    context.translate(body.position.x, body.position.y);
-                    context.rotate(body.angle);
+context.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+context.lineWidth = 2;
+context.setLineDash([5, 5]);
+context.beginPath();
+context.moveTo(20, OVER_LINE_Y);
+context.lineTo(width - 20, OVER_LINE_Y);
+context.stroke();
+context.setLineDash([]);
 
-                    const size = Math.max(15, Math.round(body.circleRadius * 0.95));
-                    context.font = `${size}px 'ArethaCustom', sans-serif`;
-                    context.textAlign = 'center';
-                    context.textBaseline = 'middle';
+const bodies = Composite.allBodies(world);
 
-                    const grad = context.createLinearGradient(0, -size / 2, 0, size / 2);
-                    if (body.customLabel === 'ArejhA') {
-                        grad.addColorStop(0.0, '#c0392b');
-                        grad.addColorStop(0.3, '#e74c3c');
-                        grad.addColorStop(0.5, '#f39c12');
-                        grad.addColorStop(0.7, '#d35400');
-                        grad.addColorStop(1.0, '#78281f');
-                        context.strokeStyle = '#3b1206';
-                    } else {
-                        grad.addColorStop(0.0, '#2980b9');
-                        grad.addColorStop(0.3, '#6dd5ed');
-                        grad.addColorStop(0.5, '#ffffff');
-                        grad.addColorStop(0.7, '#3498db');
-                        grad.addColorStop(1.0, '#1b4f72');
-                        context.strokeStyle = '#111122';
-                    }
+if (!isGameEnd && isGameStarted) {
+let arethaCount = 0;
+for (let i = 0; i < bodies.length; i++) {
+if (bodies[i].level === levels.length - 2 && !bodies[i].isRemoved) {
+arethaCount++;
+}
+}
+if (arethaCount >= 1) {
+triggerGameClear();
+return;
+}
+}
 
-                    context.fillStyle = grad;
-                    context.lineWidth = 3;
-                    context.strokeText(body.customLabel, 0, 0);
-                    context.fillText(body.customLabel, 0, 0);
-                    context.restore();
-                }
-            }
-        }
+if (!isGameEnd && isGameStarted) {
+for (let i = 0; i < bodies.length; i++) {
+const body = bodies[i];
+if (body.customLabel && !body.isStatic) {
+if (body.position.y < OVER_LINE_Y && 
+(Date.now() - body.spawnTime > 1000) && 
+Math.abs(body.velocity.y) < 0.8 && 
+Math.abs(body.velocity.x) < 0.8) {
+triggerGameOver();
+break;
+}
+}
+}
+}
 
-        function handleCollisions(event) {
-            if (isGameEnd) return;
-            const pairs = event.pairs;
+for (let i = 0; i < bodies.length; i++) {
+const body = bodies[i];
+if (body.customLabel) {
+context.save();
+context.translate(body.position.x, body.position.y);
+context.rotate(body.angle);
 
-            for (let i = 0; i < pairs.length; i++) {
-                const pair = pairs[i];
-                const bodyA = pair.bodyA;
-                const bodyB = pair.bodyB;
+const size = Math.max(15, Math.round(body.circleRadius * 0.95));
+context.font = `${size}px 'ArethaCustom', sans-serif`;
+context.textAlign = 'center';
+context.textBaseline = 'middle';
 
-                if (bodyA.level !== undefined && bodyB.level !== undefined) {
-                    // もし片方でもArejhA（お邪魔）が混ざっていたら合成させない
-                    if (levels[bodyA.level].isTrap || levels[bodyB.level].isTrap) {
-                        continue; 
-                    }
+const grad = context.createLinearGradient(0, -size / 2, 0, size / 2);
+if (body.customLabel === 'ArejhA') {
+grad.addColorStop(0.0, '#c0392b');
+grad.addColorStop(0.3, '#e74c3c');
+grad.addColorStop(0.5, '#f39c12');
+grad.addColorStop(0.7, '#d35400');
+grad.addColorStop(1.0, '#78281f');
+context.strokeStyle = '#3b1206';
+} else {
+grad.addColorStop(0.0, '#2980b9');
+grad.addColorStop(0.3, '#6dd5ed');
+grad.addColorStop(0.5, '#ffffff');
+grad.addColorStop(0.7, '#3498db');
+grad.addColorStop(1.0, '#1b4f72');
+context.strokeStyle = '#111122';
+}
 
-                    if (bodyA.level === bodyB.level) {
-                        if (bodyA.isRemoved || bodyB.isRemoved) continue;
-                        const currentLevel = bodyA.level;
-                        if (currentLevel >= levels.length - 2) return;
+context.fillStyle = grad;
+context.lineWidth = 3;
+context.strokeText(body.customLabel, 0, 0);
+context.fillText(body.customLabel, 0, 0);
+context.restore();
+}
+}
+}
 
-                        bodyA.isRemoved = true;
-                        bodyB.isRemoved = true;
-                        const midX = (bodyA.position.x + bodyB.position.x) / 2;
-                        const midY = (bodyA.position.y + bodyB.position.y) / 2;
-                        Composite.remove(world, [bodyA, bodyB]);
+function handleCollisions(event) {
+if (isGameEnd) return;
+const pairs = event.pairs;
 
-                        const nextBody = createLetterBody(midX, midY, currentLevel + 1);
-                        Composite.add(world, nextBody);
-                    }
-                }
-            }
-        }
+for (let i = 0; i < pairs.length; i++) {
+const pair = pairs[i];
+const bodyA = pair.bodyA;
+const bodyB = pair.bodyB;
 
-        function createLetterBody(x, y, level) {
-            const config = levels[level];
-            const body = Bodies.circle(x, y, config.radius, {
-                restitution: 0.2,
-                friction: 0.1,
-                render: { visible: false }
-            });
-            body.level = level;
-            body.customLabel = config.label;
-            body.spawnTime = Date.now();
-            body.isRemoved = false;
-            return body;
-        }
+if (bodyA.level !== undefined && bodyB.level !== undefined) {
+// もし片方でもArejhA（お邪魔）が混ざっていたら合成させない
+if (levels[bodyA.level].isTrap || levels[bodyB.level].isTrap) {
+continue; 
+}
+
+if (bodyA.level === bodyB.level) {
+if (bodyA.isRemoved || bodyB.isRemoved) continue;
+const currentLevel = bodyA.level;
+if (currentLevel >= levels.length - 2) return;
+
+bodyA.isRemoved = true;
+bodyB.isRemoved = true;
+const midX = (bodyA.position.x + bodyB.position.x) / 2;
+const midY = (bodyA.position.y + bodyB.position.y) / 2;
+Composite.remove(world, [bodyA, bodyB]);
+
+const nextBody = createLetterBody(midX, midY, currentLevel + 1);
+Composite.add(world, nextBody);
+}
+}
+}
+}
+
+function createLetterBody(x, y, level) {
+const config = levels[level];
+const body = Bodies.circle(x, y, config.radius, {
+restitution: 0.2,
+friction: 0.1,
+render: { visible: false }
+});
+body.level = level;
+body.customLabel = config.label;
+body.spawnTime = Date.now();
+body.isRemoved = false;
+return body;
+}
 
 const ranks = [
-            // --- ⚡ 超高速・スピードスター向け ---
-            { limit: 3,   name: "⚡ 光の女神 級 ⚡" },
-            { limit: 4,  name: "💡 スバラッキー 級 💡" },
-            { limit: 6,  name: "✨ テスタメント 級 ✨" },
-            { limit: 8,  name: "🌟 ミレニアム 級 🌟" },
-            { limit: 10,  name: "🐉 ペンタドラゴン 級 🐉" },
-            
-            // --- 💍 中盤スタンダード層向け ---
-            { limit: 55,  name: "💍 Gキャッツアイ 級 💍" },
-            { limit: 65, name: "💍 Sキャッツアイ 級 💍" },
-            { limit: 70, name: "💍 Bキャッツアイ 級 💍" },
-            { limit: 80, name: "🍷 シャンパン 級 🍷" },
-            { limit: 85, name: "💎 6,500,000PERA 級 💎" },
-            
-            // --- ⛺ じっくり・エンジョイ勢向け ---
-            { limit: 90, name: "💰 しゃっきんトンボ 級 💰" },
-            { limit: 100, name: "💳 ゴールドカード 級 💳" },
-            { limit: 120, name: "💪 フォース 級 💪" },
-            { limit: 130, name: "⛺ キャンプセット 級 ⛺" },
-            { limit: 150, name: "💊 カプセル 級 💊" },
-            { limit: 180, name: "🍙 たくあん＆おにぎり 級 🍙" },
-            { limit: 9999, name: "🐢 おじぃ 級 🐢" }
-        ];
+// --- ⚡ 超高速・スピードスター向け ---
+{ limit: 3,   name: "⚡ 光の女神 級 ⚡" },
+{ limit: 4,  name: "💡 スバラッキー 級 💡" },
+{ limit: 6,  name: "✨ テスタメント 級 ✨" },
+{ limit: 8,  name: "🌟 ミレニアム 級 🌟" },
+{ limit: 10,  name: "🐉 ペンタドラゴン 級 🐉" },
 
-        function getPraiseMessage(sec) {
-            let matchedRank = ranks[ranks.length - 1];
-            let rankIndex = ranks.length;
+// --- 💍 中盤スタンダード層向け ---
+{ limit: 55,  name: "💍 Gキャッツアイ 級 💍" },
+{ limit: 65, name: "💍 Sキャッツアイ 級 💍" },
+{ limit: 70, name: "💍 Bキャッツアイ 級 💍" },
+{ limit: 80, name: "🍷 シャンパン 級 🍷" },
+{ limit: 85, name: "💎 6,500,000PERA 級 💎" },
 
-            for (let i = 0; i < ranks.length; i++) {
-                if (sec < ranks[i].limit) {
-                    matchedRank = ranks[i];
-                    rankIndex = i + 1;
-                    break;
-                }
-            }
-            const totalRanks = ranks.length;
-            return `${matchedRank.name}<br><span style="font-size:11px; color:#aaa; font-weight:normal;">(全 ${totalRanks} ランク中 / 第 ${rankIndex} 位)</span>`;
-        }
+// --- ⛺ じっくり・エンジョイ勢向け ---
+{ limit: 90, name: "💰 しゃっきんトンボ 級 💰" },
+{ limit: 100, name: "💳 ゴールドカード 級 💳" },
+{ limit: 120, name: "💪 フォース 級 💪" },
+{ limit: 130, name: "⛺ キャンプセット 級 ⛺" },
+{ limit: 150, name: "💊 カプセル 級 💊" },
+{ limit: 180, name: "🍙 たくあん＆おにぎり 級 🍙" },
+{ limit: 9999, name: "🐢 おじぃ 級 🐢" }
+];
 
-        function triggerGameClear() {
-            isGameEnd = true;
-            clearInterval(timerInterval);
-            finalTimeSec = ((Date.now() - startTime) / 1000).toFixed(1);
-            clearAnimTimer = Date.now();
+function getPraiseMessage(sec) {
+let matchedRank = ranks[ranks.length - 1];
+let rankIndex = ranks.length;
 
-            document.getElementById('clear-time').innerText = `[タイム] ${finalTimeSec}秒`;
-            document.getElementById('clear-praise').innerHTML = getPraiseMessage(finalTimeSec);
-            
-            const clearScreen = document.getElementById('clear-screen');
-            clearScreen.style.display = 'flex';
-            setTimeout(() => {
-                clearScreen.classList.add('show');
-            }, 50);
+for (let i = 0; i < ranks.length; i++) {
+if (sec < ranks[i].limit) {
+matchedRank = ranks[i];
+rankIndex = i + 1;
+break;
+}
+}
+const totalRanks = ranks.length;
+return `${matchedRank.name}<br><span style="font-size:11px; color:#aaa; font-weight:normal;">(全 ${totalRanks} ランク中 / 第 ${rankIndex} 位)</span>`;
+}
 
-            Engine.clear(engine);
-            Runner.stop(runner);
-        }
+function triggerGameClear() {
+isGameEnd = true;
+clearInterval(timerInterval);
+finalTimeSec = ((Date.now() - startTime) / 1000).toFixed(1);
+clearAnimTimer = Date.now();
 
-        function triggerGameOver() {
-            isGameEnd = true;
-            clearInterval(timerInterval);
-            const goScreen = document.getElementById('gameover-screen');
-            goScreen.style.display = 'flex';
-            setTimeout(() => {
-                goScreen.classList.add('show');
-            }, 50);
-            Engine.clear(engine);
-            Runner.stop(runner);
-        }
+document.getElementById('clear-time').innerText = `[タイム] ${finalTimeSec}秒`;
+document.getElementById('clear-praise').innerHTML = getPraiseMessage(finalTimeSec);
 
-        function restartGame(e) {
-            if (e) e.stopPropagation();
-            const clearScreen = document.getElementById('clear-screen');
-            const goScreen = document.getElementById('gameover-screen');
-            clearScreen.classList.remove('show');
-            goScreen.classList.remove('show');
-            setTimeout(() => {
-                clearScreen.style.display = 'none';
-                goScreen.style.display = 'none';
-                initGame();
-            }, 300);
-        }
+const clearScreen = document.getElementById('clear-screen');
+clearScreen.style.display = 'flex';
+setTimeout(() => {
+clearScreen.classList.add('show');
+}, 50);
 
-        document.getElementById('clear-btn').addEventListener('click', restartGame);
-        document.getElementById('clear-btn').addEventListener('touchend', (e) => { e.preventDefault(); restartGame(e); });
-        document.getElementById('gameover-btn').addEventListener('click', restartGame);
-        document.getElementById('gameover-btn').addEventListener('touchend', (e) => { e.preventDefault(); restartGame(e); });
+Engine.clear(engine);
+Runner.stop(runner);
+}
 
-        const resetBtn = document.getElementById('reset-btn');
-        resetBtn.addEventListener('click', restartGame);
-        resetBtn.addEventListener('touchend', (e) => { e.preventDefault(); restartGame(e); });
+function triggerGameOver() {
+isGameEnd = true;
+clearInterval(timerInterval);
+const goScreen = document.getElementById('gameover-screen');
+goScreen.style.display = 'flex';
+setTimeout(() => {
+goScreen.classList.add('show');
+}, 50);
+Engine.clear(engine);
+Runner.stop(runner);
+}
 
-        const titleEl = document.getElementById('game-title');
-        titleEl.addEventListener('click', restartGame);
-        titleEl.addEventListener('touchend', (e) => { e.preventDefault(); restartGame(e); });
+function restartGame(e) {
+if (e) e.stopPropagation();
+const clearScreen = document.getElementById('clear-screen');
+const goScreen = document.getElementById('gameover-screen');
+clearScreen.classList.remove('show');
+goScreen.classList.remove('show');
+setTimeout(() => {
+clearScreen.style.display = 'none';
+goScreen.style.display = 'none';
+initGame();
+}, 300);
+}
 
-        let canDrop = true;
-        function handleDrop(clientX) {
-            if (!canDrop || isGameEnd) return;
+document.getElementById('clear-btn').addEventListener('click', restartGame);
+document.getElementById('clear-btn').addEventListener('touchend', (e) => { e.preventDefault(); restartGame(e); });
+document.getElementById('gameover-btn').addEventListener('click', restartGame);
+document.getElementById('gameover-btn').addEventListener('touchend', (e) => { e.preventDefault(); restartGame(e); });
 
-            if (!isGameStarted) {
-                isGameStarted = true;
-                startTime = Date.now();
-                clearInterval(timerInterval);
-                timerInterval = setInterval(updateTimer, 100);
-            }
+const resetBtn = document.getElementById('reset-btn');
+resetBtn.addEventListener('click', restartGame);
+resetBtn.addEventListener('touchend', (e) => { e.preventDefault(); restartGame(e); });
 
-            const container = document.getElementById('game-container');
-            const rect = container.getBoundingClientRect();
-            const x = clientX - rect.left;
-            const dropX = Math.max(25, Math.min(width - 25, x));
+const titleEl = document.getElementById('game-title');
+titleEl.addEventListener('click', restartGame);
+titleEl.addEventListener('touchend', (e) => { e.preventDefault(); restartGame(e); });
 
-            const newBody = createLetterBody(dropX, 30, currentNextLevel);
-            Composite.add(world, newBody);
+let canDrop = true;
+function handleDrop(clientX) {
+if (!canDrop || isGameEnd) return;
 
-            currentNextLevel = getRandomStartLevel();
-            updateNextPreview();
+if (!isGameStarted) {
+isGameStarted = true;
+startTime = Date.now();
+clearInterval(timerInterval);
+timerInterval = setInterval(updateTimer, 100);
+}
 
-            canDrop = false;
-            setTimeout(() => { canDrop = true; }, 300);
-        }
+const container = document.getElementById('game-container');
+const rect = container.getBoundingClientRect();
+const x = clientX - rect.left;
+const dropX = Math.max(25, Math.min(width - 25, x));
 
-        const container = document.getElementById('game-container');
-        container.addEventListener('click', function(event) {
-            handleDrop(event.clientX);
-        });
+const newBody = createLetterBody(dropX, 30, currentNextLevel);
+Composite.add(world, newBody);
 
-        container.addEventListener('touchstart', function(event) {
-            if (isGameEnd) return;
-            event.preventDefault();
-            if (event.touches.length > 0) {
-                handleDrop(event.touches[0].clientX);
-            }
-        }, { passive: false });
+currentNextLevel = getRandomStartLevel();
+updateNextPreview();
 
-        initGame();
+canDrop = false;
+setTimeout(() => { canDrop = true; }, 300);
+}
 
-        const opBtn = document.getElementById('btn-op');
-        const opScreen = document.getElementById('opening-screen');
-        const opCloseBtn = document.getElementById('op-close-btn');
-        const opFlowingText = document.getElementById('op-flowing-text');
-        const opCenterLogo = document.getElementById('op-center-logo');
-        let opAnimStartTime = null;
-        let opAnimFrame = null;
+const container = document.getElementById('game-container');
+container.addEventListener('click', function(event) {
+handleDrop(event.clientX);
+});
 
-        opBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            startOpening();
-        });
-        
-        opCloseBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            closeOpening();
-        });
-        opCloseBtn.addEventListener('touchend', (e) => {
-            e.stopPropagation();
-            e.preventDefault();
-            closeOpening();
-        });
+container.addEventListener('touchstart', function(event) {
+if (isGameEnd) return;
+event.preventDefault();
+if (event.touches.length > 0) {
+handleDrop(event.touches[0].clientX);
+}
+}, { passive: false });
 
-        function startOpening() {
-            opScreen.style.display = 'flex';
-            opCenterLogo.style.display = 'none';
-            opFlowingText.style.display = 'block';
+initGame();
 
-            opAnimStartTime = performance.now();
-            if (opAnimFrame) cancelAnimationFrame(opAnimFrame);
+const opBtn = document.getElementById('btn-op');
+const opScreen = document.getElementById('opening-screen');
+const opCloseBtn = document.getElementById('op-close-btn');
+const opFlowingText = document.getElementById('op-flowing-text');
+const opCenterLogo = document.getElementById('op-center-logo');
+let opAnimStartTime = null;
+let opAnimFrame = null;
 
-            function loop(now) {
-                if (opScreen.style.display === 'none') return;
-                const elapsed = (now - opAnimStartTime) / 1000;
-                const flowDuration = 3.8;
+opBtn.addEventListener('click', (e) => {
+e.stopPropagation();
+startOpening();
+});
 
-                if (elapsed <= flowDuration) {
-                    const progress = elapsed / flowDuration;
-                    const leftPos = 120 - progress * 400;
-                    opFlowingText.style.left = `${leftPos}%`;
-                    opFlowingText.style.top = '50%';
-                    opFlowingText.style.transform = 'translateY(-50%)';
-                    opFlowingText.style.opacity = '1';
-                    opAnimFrame = requestAnimationFrame(loop);
-                } else if (elapsed > flowDuration && elapsed <= flowDuration + 0.4) {
-                    opFlowingText.style.opacity = '0';
-                    opFlowingText.style.display = 'none';
-                    opAnimFrame = requestAnimationFrame(loop);
-                } else if (elapsed > flowDuration + 0.4 && elapsed <= flowDuration + 2.4) {
-                    opFlowingText.style.display = 'block';
-                    const subElapsed = elapsed - (flowDuration + 0.4);
-                    const progress = subElapsed / 2.0;
+opCloseBtn.addEventListener('click', (e) => {
+e.stopPropagation();
+closeOpening();
+});
+opCloseBtn.addEventListener('touchend', (e) => {
+e.stopPropagation();
+e.preventDefault();
+closeOpening();
+});
 
-                    const angle = progress * Math.PI * 4;
-                    const scale = Math.max(0.01, 1.0 - progress);
-                    const opacity = Math.max(0, progress); 
-                    
-                    opFlowingText.style.left = '50%';
-                    opFlowingText.style.top = '50%';
-                    opFlowingText.style.transform = `translate(-50%, -50%) scale(${scale}) rotate(${angle}rad)`;
-                    opFlowingText.style.opacity = opacity.toString();
+function startOpening() {
+opScreen.style.display = 'flex';
+opCenterLogo.style.display = 'none';
+opFlowingText.style.display = 'block';
 
-                    opAnimFrame = requestAnimationFrame(loop);
-                } else if (elapsed > flowDuration + 2.4 && elapsed <= flowDuration + 2.8) {
-                    opCenterLogo.style.display = 'none';
-                    opAnimFrame = requestAnimationFrame(loop);
-                } else if (elapsed > flowDuration + 2.8 && elapsed <= flowDuration + 4.8) {
-                    opFlowingText.style.display = 'none';
-                    opCenterLogo.style.display = 'block';
-                    opCenterLogo.style.transform = 'translate(-50%, -50%) scale(1)';
-                    opCenterLogo.style.opacity = '1';
-                    opAnimFrame = requestAnimationFrame(loop);
-                }
-            }
-            opAnimFrame = requestAnimationFrame(loop);
-        }
+opAnimStartTime = performance.now();
+if (opAnimFrame) cancelAnimationFrame(opAnimFrame);
 
-        function closeOpening() {
-            if (opAnimFrame) cancelAnimationFrame(opAnimFrame);
-            opScreen.style.display = 'none';
-            opFlowingText.style.display = 'block';
-            opCenterLogo.style.display = 'none';
-        }
+function loop(now) {
+if (opScreen.style.display === 'none') return;
+const elapsed = (now - opAnimStartTime) / 1000;
+const flowDuration = 3.8;
 
-        const edBtn = document.getElementById('btn-ed');
-        const edScreen = document.getElementById('ending-screen');
-        const edCloseBtn = document.getElementById('ed-close-btn');
+if (elapsed <= flowDuration) {
+const progress = elapsed / flowDuration;
+const leftPos = 120 - progress * 400;
+opFlowingText.style.left = `${leftPos}%`;
+opFlowingText.style.top = '50%';
+opFlowingText.style.transform = 'translateY(-50%)';
+opFlowingText.style.opacity = '1';
+opAnimFrame = requestAnimationFrame(loop);
+} else if (elapsed > flowDuration && elapsed <= flowDuration + 0.4) {
+opFlowingText.style.opacity = '0';
+opFlowingText.style.display = 'none';
+opAnimFrame = requestAnimationFrame(loop);
+} else if (elapsed > flowDuration + 0.4 && elapsed <= flowDuration + 2.4) {
+opFlowingText.style.display = 'block';
+const subElapsed = elapsed - (flowDuration + 0.4);
+const progress = subElapsed / 2.0;
 
-        edBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            edScreen.classList.add('active');
-        });
+const angle = progress * Math.PI * 4;
+const scale = Math.max(0.01, 1.0 - progress);
+const opacity = Math.max(0, progress); 
 
-        edCloseBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            edScreen.classList.remove('active');
-        });
-        edCloseBtn.addEventListener('touchend', (e) => {
-            e.stopPropagation();
-            e.preventDefault();
-            edScreen.classList.remove('active');
-        });
+opFlowingText.style.left = '50%';
+opFlowingText.style.top = '50%';
+opFlowingText.style.transform = `translate(-50%, -50%) scale(${scale}) rotate(${angle}rad)`;
+opFlowingText.style.opacity = opacity.toString();
 
-        opScreen.addEventListener('click', (e) => { e.stopPropagation(); });
-        opScreen.addEventListener('touchstart', (e) => { e.stopPropagation(); }, { passive: false });
-        edScreen.addEventListener('click', (e) => { e.stopPropagation(); });
-        edScreen.addEventListener('touchstart', (e) => { e.stopPropagation(); }, { passive: false });
+opAnimFrame = requestAnimationFrame(loop);
+} else if (elapsed > flowDuration + 2.4 && elapsed <= flowDuration + 2.8) {
+opCenterLogo.style.display = 'none';
+opAnimFrame = requestAnimationFrame(loop);
+} else if (elapsed > flowDuration + 2.8 && elapsed <= flowDuration + 4.8) {
+opFlowingText.style.display = 'none';
+opCenterLogo.style.display = 'block';
+opCenterLogo.style.transform = 'translate(-50%, -50%) scale(1)';
+opCenterLogo.style.opacity = '1';
+opAnimFrame = requestAnimationFrame(loop);
+}
+}
+opAnimFrame = requestAnimationFrame(loop);
+}
+
+function closeOpening() {
+if (opAnimFrame) cancelAnimationFrame(opAnimFrame);
+opScreen.style.display = 'none';
+opFlowingText.style.display = 'block';
+opCenterLogo.style.display = 'none';
+}
+
+const edBtn = document.getElementById('btn-ed');
+const edScreen = document.getElementById('ending-screen');
+const edCloseBtn = document.getElementById('ed-close-btn');
+
+edBtn.addEventListener('click', (e) => {
+e.stopPropagation();
+edScreen.classList.add('active');
+});
+
+edCloseBtn.addEventListener('click', (e) => {
+e.stopPropagation();
+edScreen.classList.remove('active');
+});
+edCloseBtn.addEventListener('touchend', (e) => {
+e.stopPropagation();
+e.preventDefault();
+edScreen.classList.remove('active');
+});
+
+opScreen.addEventListener('click', (e) => { e.stopPropagation(); });
+opScreen.addEventListener('touchstart', (e) => { e.stopPropagation(); }, { passive: false });
+edScreen.addEventListener('click', (e) => { e.stopPropagation(); });
+edScreen.addEventListener('touchstart', (e) => { e.stopPropagation(); }, { passive: false });
 
 const updateBtn = document.getElementById('btn-update');
-        const updateModal = document.getElementById('update-modal');
-        const updateCloseBtn = document.getElementById('update-close-btn');
+const updateModal = document.getElementById('update-modal');
+const updateCloseBtn = document.getElementById('update-close-btn');
 
-        updateBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            updateModal.classList.add('active');
-        });
+updateBtn.addEventListener('click', (e) => {
+e.stopPropagation();
+updateModal.classList.add('active');
+});
 
-        updateCloseBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            updateModal.classList.remove('active');
-        });
-        updateCloseBtn.addEventListener('touchend', (e) => {
-            e.stopPropagation();
-            e.preventDefault();
-            updateModal.classList.remove('active');
-        });
+updateCloseBtn.addEventListener('click', (e) => {
+e.stopPropagation();
+updateModal.classList.remove('active');
+});
+updateCloseBtn.addEventListener('touchend', (e) => {
+e.stopPropagation();
+e.preventDefault();
+updateModal.classList.remove('active');
+});
 
-        // モーダル背景の誤爆ガード
-        updateModal.addEventListener('click', (e) => { e.stopPropagation(); });
-        updateModal.addEventListener('touchstart', (e) => { e.stopPropagation(); }, { passive: false });
+// モーダル背景の誤爆ガード
+updateModal.addEventListener('click', (e) => { e.stopPropagation(); });
+updateModal.addEventListener('touchstart', (e) => { e.stopPropagation(); }, { passive: false });
 </script>
 <!-- 以上、Javascript場所 -->
 
 <!-- 
-  ※注意書き※
-  このゲームは非公認のファンメイドゲームであり、「ARETHA（アレサ）」等の名称・文字は実在のゲームおよび関連企業とは一切関係ありません。
+※注意書き※
+このゲームは非公認のファンメイドゲームであり、「ARETHA（アレサ）」等の名称・文字は実在のゲームおよび関連企業とは一切関係ありません。
 
-  ※ゲーム内で使用している「A-RETHA-light.ttf」は、みぽん製のオリジナルフォントです。
-  （フォントデータの無断抽出・二次配布などはご遠慮ください）
-  フォント以外のソースコード部分はご自由にお使いいただき、ご自身で書き換え＆改造などしたら、自分だけの言葉合体ゲームになると思います！
+※ゲーム内で使用している「A-RETHA-light.ttf」は、みぽん製のオリジナルフォントです。
+（フォントデータの無断抽出・二次配布などはご遠慮ください）
+フォント以外のソースコード部分はご自由にお使いいただき、ご自身で書き換え＆改造などしたら、自分だけの言葉合体ゲームになると思います！
 
-  ※物理演算には外部ライブラリ「Matter.js」を使用しています。
+※物理演算には外部ライブラリ「Matter.js」を使用しています。
 
-  ※本ゲームのプレイ、およびソースコードの使用・改造によって生じたいかなるトラブル・損害についても、作者は一切の責任を負いません。
+※本ゲームのプレイ、およびソースコードの使用・改造によって生じたいかなるトラブル・損害についても、作者は一切の責任を負いません。
 
-  楽しんでね！
+楽しんでね！
 【|← ARETHA 大好き | ┗(^o^ )┓ 】
-    -->
+-->
 </body>
 </html>
