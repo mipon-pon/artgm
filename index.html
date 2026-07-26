@@ -266,30 +266,44 @@ text-align: center;
 
 #ending-screen.active {display: flex;}
 
-#ending-screen.active .sw-content {animation: crawl 20s linear infinite;}
+
+
+
+#ending-screen.active .sw-content {
+    animation: crawl 38s linear forwards;
+}
 
 .sw-fade {
-position: absolute;
-top: 0; left: 0; width: 100%; height: 100%;
-background: linear-gradient(0deg, transparent 80%, rgba(0,0,0,1) 100%);
-z-index: 102;
-pointer-events: none;
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(0deg, transparent 80%, rgba(0,0,0,1) 100%);
+    z-index: 102;
+    pointer-events: none;
 }
 
 .sw-content {
-position: absolute;
-width: 80%;
-top: 100%;
-color: #ffde59;
-font-weight: bold;
-font-size: 14px;
-line-height: 1.8;
-text-align: center;
+    position: absolute;
+    width: 80%;
+    top: 100%;
+    color: #ffde59;
+    font-weight: bold;
+    font-size: 12px;
+    line-height: 1.4;
+    text-align: center;
+    padding-bottom: 400px; /* 最後の行を真ん中に止めるための下部余白 */
 }
 
 @keyframes crawl {
-0% { transform: translateY(0); opacity: 1; }
-100% { transform: translateY(-900px); opacity: 0.2; }
+    0% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    100% {
+        /* 等速でスーッと流れて、最後の行がど真ん中でピタッと停止します */
+        /* ※もし位置がズレる場合は、ここの「-1650px」の数字を微調整してね！ */
+        transform: translateY(-1650px);
+        opacity: 1;
+    }
 }
 
 .sw-skip-msg {
@@ -474,7 +488,48 @@ white-space: nowrap;
 <button class="modal-close-btn" id="ed-close-btn">&times;</button>
 <div class="sw-fade"></div>
 <div class="sw-content">
+[ エピローグ ]<br>
+制作 構想 ・開始 …26/7/25深夜<br>
+制作 完了 ・発表 …26/7/26午後<br>
+制作仕上げ・完成 …26/7/27早朝<br>
+<br>
+<br>
+【♥STAFF CREDITS♥】<br>
+原案 : 自分<br>
+世界観構築 ＆ シナリオ統括 : 自分<br>
+クリエイティブディレクター : 自分<br>
+<br>
+＜DESIGN & ART WORKS＞<br>
+フォントデザイン : 自分<br>
+タイポグラフィ : 自分<br>
+キービジュアル : 自分<br>
+アートディレクション : 自分<br>
+UI/UX デザイン : 自分<br>
+<br>
+＜PROGRAMMING & ENGINEERING＞<br>
+AIパートナー : Gemini<br>
+リードプログラマー : Gemini（丸投げ）<br>
+デバッグ ＆ バグ生み出し係 : Gemini<br>
+コードリファクタリング補佐 : Gemini<br>
+<br>
+＜GAME BALANCE & QA＞<br>
+テストプレイ協力 : 友人知人の皆様<br>
+ゲームバランス調整 : 自分<br>
+難易度監修 : 自分<br>
+<br>
+＜SUPPORT & WELL-BEING＞<br>
+ロケ弁・夜食調達係 : 自分<br>
+おやつ : ポテチ（美味しい）<br>
+ドリンク : Dr Pepper（美味しい）<br><br>
+<br>
+総監督 / 総指揮 / <br>
+ゼネラルプロデューサー : 自分<br>
+<br>
+<br>
 【制作後記】<br><br>
+初のブラウザゲーム公開です<br>
+コーディングレベル低いし知識も少ないけど、「こういうゲーム作れる？ブラウザのみで」ってAIに聞いたら、geminiが即コーディングしてくれました。早い！<br><br>
+
 ゲーム作り、ムズい！<br>
 たのしい！ムズい！たのしい！<br><br>
 
@@ -491,8 +546,10 @@ Tじゃなくて、Jだよ！マギラワシイ！<br>
 ジャマだねぇ困っちゃうねぇ<br><br>
 
 まあ、その、あれ、さ。<br>
-遊んでくれて本当にありがとうねー！<br><br>
-— 完 —
+遊んでくれて本当にありがとうねー！<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+＜SPECIAL THANKS＞<br>
+AND YOU! （画面の前のあなた）
 </div>
 <div class="sw-skip-msg">※右上の×をクリックで閉じます</div>
 </div>
@@ -580,10 +637,6 @@ else return 6;				   // ★AREJHA (6%の確率で混入！)
 
 //GAME OVERの判定部分
 //判定ライン（OVER_LINE_Y）を少し下（数字を大きく）にするいまは 70 になっているから、ここを 90 や 100 あたりにすると、少し積み上がっただけで即アウトになるよ。
-//滞留時間（spawnTime の比較）を短くするいまは 1000（1秒間）止まっていたらアウトだけど、ここを 500（0.5秒）などに縮めると、天井付近でモタモタしているときの猶予がなくなって厳しくなるよ。
-//速度の許容範囲（velocity.y / velocity.x）を広げる少しでも動いていたらセーフだったのを、しっかり止まっていないと即アウトにするように判定をシビアにできるよ。
-//一番手っ取り早く厳しくするなら、OVER_LINE_Y = 70; の数字を 90 くらいに上げて、中の 1000 を 500 に短縮するのがおすすめ！
-
 const OVER_LINE_Y = 90;
 
 function initGame() {
@@ -655,10 +708,6 @@ const elapsed = (Date.now() - startTime) / 1000;
 document.getElementById('timer-display').innerText = elapsed.toFixed(1) + '秒';
 }
 
-
-
-
-
 function drawCustomElements() {
 const context = render.context;
 
@@ -709,10 +758,7 @@ return;
 }
 }
 
-
-
 //滞留時間（spawnTime の比較）を短くするいまは 1000（1秒間）止まっていたらアウトだけど、ここを 500（0.5秒）などに縮めると、天井付近でモタモタしているときの猶予がなくなって厳しくなるよ。
-
 if (!isGameEnd && isGameStarted) {
 for (let i = 0; i < bodies.length; i++) {
 const body = bodies[i];
