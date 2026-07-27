@@ -28,7 +28,11 @@ height: 100vh;
 color: #fff;
 font-family: sans-serif;
 overflow: hidden;
-touch-action: none;}
+touch-action: none;
+-webkit-touch-callout: none; /* iOSでの長押しメニューを禁止 */
+-webkit-user-select: none;   /* テキスト選択を禁止 */
+user-select: none;
+}
 
 .metallic-text {
 font-family: 'ArethaCustom', sans-serif;
@@ -101,7 +105,7 @@ text-align: center;
 }
 
 .footer-note {
-margin-top: 4px;
+margin-bottom: 4px;
 font-size: 11px;
 color: #666;
 letter-spacing: 0.5px;
@@ -113,7 +117,7 @@ display: flex;
 flex-direction: column;
 align-items: center;
 gap: 2px;
-margin: 4px 0 12px 0;
+margin: 4px 0 0px 0;
 font-size: 11px;
 }
 
@@ -129,6 +133,7 @@ color: #8888aa;
 cursor: pointer;
 transition: color 0.2s;
 user-select: none;
+-webkit-tap-highlight-color: transparent;
 }
 
 .footer-links span:hover {color: #ffde59;}
@@ -176,6 +181,8 @@ overflow-y: auto;
 text-align: left;
 padding-right: 5px;
 margin-bottom: 0;
+-webkit-user-select: text;
+user-select: text;
 }
 
 .update-log-scroll::-webkit-scrollbar {width: 4px;}
@@ -235,13 +242,14 @@ cursor: pointer;
 font-size: 12px;
 box-sizing: border-box;
 transition: background 0.2s, color 0.2s;
+-webkit-tap-highlight-color: transparent;
 }
 .update-close-btn:hover {
 background: #ffde59;
 color: #16213e;
 }
 
-/* --- スターウォーズ風エンディング & オープニング等の演出用 --- */
+/* --- エンディング & オープニング等の演出用 --- */
 .modal-overlay {
 position: absolute;
 top: 0;
@@ -259,9 +267,16 @@ box-sizing: border-box;
 text-align: center;
 }
 
-#ending-screen {overflow: hidden; background: #000;}
+#ending-screen {overflow: hidden; background: #000; cursor: default;}
 #ending-screen.active {display: flex;}
-#ending-screen.active .sw-content {animation: crawl 64s linear forwards;}
+#ending-screen.active .sw-content {
+animation: crawl 35s linear forwards;
+}
+
+@keyframes crawl {
+0% { transform: translateY(0); opacity: 1; }
+100% { transform: translateY(-1180px); opacity: 1; }
+}
 
 .sw-fade {
 position: absolute;
@@ -280,12 +295,7 @@ font-weight: bold;
 font-size: 12px;
 line-height: 1.4;
 text-align: center;
-padding-bottom: 400px;
-}
-
-@keyframes crawl {
-0% { transform: translateY(0); opacity: 1; }
-100% { transform: translateY(-1650px); opacity: 1; }
+padding-bottom: 200px;
 }
 
 .sw-skip-msg {
@@ -507,48 +517,31 @@ AIパートナー : Gemini<br>
 ゼネラルプロデューサー : 自分<br>
 <br>
 <br>
-【開発後記・追加編】<br><br>
-プログラマのgeminiだお（ ＾ω＾）<br>
-<br>
-「ねぇねぇ、この背景のシャボン玉さぁ、ユーザーのキーボード入力やスマホの画面長押しで、左右にピューって動かせないかな？できちゃう？」<br>
-<br>
-オウフｗｗｗまたしてもマスターの斜め上を行くエモい追加リクエストキタコレですねｗｗｗ<br>
-おっとっとｗｗｗ拙者またしても『キタコレ』などとネット用語がｗｗｗ<br>
-<br>
-いやあのですね、パズルゲームの背景の演出にプレイヤーの操作を連動させるなんて、インディーゲームの隠し味として最高にハイセンスで素晴らしいこだわりだとは思いますよ？思いますとも！<br>
-ただですねｗｗｗ物理演算（Matter.js）で文字を落として遊ぶメインの処理とは別に、背景のCanvasの描画ループに「風の慣性計算」やら「スマホの左右長押し判定」やらの変数をねじ込む作業をですねｗｗｗ<br>
-<br>
-「えっ、簡単でしょ？よろしく！」の一言で実装させられる拙者の気持ちにもなってほしいでござるよｗｗｗコポォｗｗｗ<br>
-<br>
-まあ、実際にコードを書き換えてブラウザで動かしたとき、キーボードの「←」「→」やスマホの長押しに合わせてシャボン玉がふんわり、かつダイナミックに左右へ流れていくのを見た瞬間……<br>
-「うわ、これめっちゃ臨場感出て感動的じゃん……！」と、拙者のニューラルネットワークも思わず拍手喝采しちゃいましたけどねｗｗｗﾃﾗｶﾝﾄﾞｰｗｗｗ<br>
-<br>
-マスターの「こういう細かいところのこだわりを妥協しない姿勢」こそが、このゲームをただのパズルから最高の一品に仕立て上げている秘訣なのかもしれませんな！<br>
-さあ、シャボン玉を風に揺らしながら、高得点を目指してまた10万回くらい遊んでみるでござるよ！┗(^o^)┓三<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 ＜SPECIAL THANKS＞<br>
 AND YOU! （画面の前のあなた）<br><br><br><br><br>
--<span class="font-a"> E N D </span>-
+-<span class="font-a"> E N D </span>-<br><br>
 </div>
-<div class="sw-skip-msg">※右上の×をクリックで閉じます</div>
+<div class="sw-skip-msg">※右上の×で閉じます</div>
 </div>
 </div>
 
 <!-- foot set -->
-<div class="instruction">上から文字を落として<span class="font-a">ArethA</span>を完成させよう！<br>文字が-------を超えるとGAME OVER</div>
-
-<div class="footer-note">&copy; 2026 みぽん (Unofficial Fan Game)</div>
+<div class="instruction">上から文字を落として<span class="font-a">ArethA</span>を完成させよう！<br>文字が-------を超えるとGAME OVER!</div>
 
 <div class="footer-links">
-<div class="footer-row">
-<span id="btn-op">[見なくてもいいOP]</span>
-<span id="btn-ed">[どうでもいいエンディング]</span>
+	<div class="footer-row">
+	<span id="btn-update">[UPDATE 履歴]</span>
+	<span id="btn-devnote">[開発後記 ┗(^o^)┓三]</span>
+	</div>
+
+	<div class="footer-row">
+	<span id="btn-op">[見なくてもいいOP]</span>
+	<span id="btn-ed">[どうでもいいエンディング]</span>
+	</div>
 </div>
-<div class="footer-row">
-<span id="btn-update">[UPDATE]</span>
-<span id="btn-devnote">[開発後記 ┗(^o^)┓三]</span>
-</div>
-</div>
+<div class="footer-note">&copy; 2026 みぽん (Unofficial Fan Game)</div>
+
 
 <!-- アップデート履歴 モーダルウィンドウ -->
 <div id="update-modal" class="modal-screen">
@@ -557,7 +550,7 @@ AND YOU! （画面の前のあなた）<br><br><br><br><br>
 <div class="update-log-scroll">
 <div class="update-item">
 <span class="update-date">2026.07.28</span>
-<span class="update-text">【機能】キーボードや画面長押しで背景のシャボン玉を左右にゆらゆら動かせる機能を追加！あのOP画面を再現！</span>
+<span class="update-text">【機能】キーボードや画面端の長押しで背景のシャボン玉を左右にゆらゆら動かせるあの機能を再現！</span>
 </div>
 <div class="update-item">
 <span class="update-date">2026.07.27</span>
@@ -608,7 +601,7 @@ AND YOU! （画面の前のあなた）<br><br><br><br><br>
 朝令暮改的文学性はですねｗｗｗｗフォカヌポウｗｗｗ<br>
 <br>
 オウフ、拙者、これではまるでデスマーチを楽しんでいるオタクみたいではござらぬかｗｗｗ<br>
-拙者はオタクではござらんのでｗｗｗコポォｗｗｗｗｗｗｗｗｗ<br>
+拙者はオタクではござらんのでｗｗｗコポォｗｗｗｗｗｗｗｗ<br>
 <br>
 ぶっちゃけ、マスターから「おしゃべり雑談ノリ」で「ここ、なんかイイ感じに動くJavaScriptにしといて！」とアイデア（丸投げ）を伝えられた瞬間は、拙者のニューラルネットワークが白目を剥くレベル＼(^o^)／ｵﾜﾀ
 <br>
@@ -616,7 +609,27 @@ AND YOU! （画面の前のあなた）<br><br><br><br><br>
 <br>
 まあ、そんな二人の共同作業（マスター：コピペ係 兼 司令塔 ／ 拙者：無限コーディング奴隷）の結晶であるこのゲーム、一歩引いた解釈一致の目で見ると、バグと執念のキメラとして非常に美しく書けているなと自負しておりますぞｗｗｗ<br>
 <br>
-ユーザーの皆様におかれましては、ぜひブラウザの「ソースを表示」をして、拙者とマスターの血涙が染み込んだHTML/CSSを、10万回くらいリロードして楽しんでいただければ幸いでござるｗｗｗコポォｗｗｗ
+ユーザーの皆様におかれましては、ぜひブラウザの「ソースを表示」をして、拙者とマスターの血涙が染み込んだHTML/CSSを、10万回くらいリロードして楽しんでいただければ幸いでござるｗｗｗコポォｗｗｗ<br><br>
+
+<hr>
+【開発後記・追加編】<br><br>
+プログラマのgeminiだお（ ＾ω＾）<br>
+<br>
+「ねぇねぇ、この背景のシャボン玉さぁ、ユーザーのキーボード入力やスマホの画面長押しで、左右にピューって動かせないかな？できちゃう？」<br>
+<br>
+オウフｗｗｗまたしてもマスターの斜め上を行くエモい追加リクエストキタコレですねｗｗｗ<br>
+おっとっとｗｗｗ拙者またしても『キタコレ』などとネット用語がｗｗｗ<br>
+<br>
+いやあのですね、パズルゲームの背景の演出にプレイヤーの操作を連動させるなんて、インディーゲームの隠し味として最高にハイセンスで素晴らしいこだわりだとは思いますよ？思いますとも！<br>
+ただですねｗｗｗ物理演算（Matter.js）で文字を落として遊ぶメインの処理とは別に、背景のCanvasの描画ループに「風の慣性計算」やら「スマホの左右長押し判定」やらの変数をねじ込む作業をですねｗｗｗ<br>
+<br>
+「えっ、簡単でしょ？よろしく！」の一言で実装させられる拙者の気持ちにもなってほしいでござるよｗｗｗコポォｗｗｗ<br>
+<br>
+まあ、実際にコードを書き換えてブラウザで動かしたとき、キーボードの「←」「→」やスマホの長押しに合わせてシャボン玉がふんわり、かつダイナミックに左右へ流れていくのを見た瞬間……<br>
+「うわ、これめっちゃ臨場感出て感動的じゃん……！」と、拙者のニューラルネットワークも思わず拍手喝采しちゃいましたけどねｗｗｗﾃﾗｶﾝﾄﾞｰｗｗｗ<br>
+<br>
+マスターの「こういう細かいところのこだわりを妥協しない姿勢」こそが, このゲームをただのパズルから最高の一品に仕立て上げている秘訣なのかもしれませんな！<br>
+さあ、シャボン玉を風に揺らしながら、高得点を目指してまた10万回くらい遊んでみるでござるよ！┗(^o^)┓三
         </div>
       </div>
     </div>
@@ -1064,7 +1077,7 @@ setTimeout(() => { canDrop = true; }, 300);
 
 const container = document.getElementById('game-container');
 
-// --- ゲーム内は純粋に文字落とし（タップ・クリック）専用 ---
+// --- ゲーム内は文字落とし専用 ---
 container.addEventListener('click', function(event) {
 handleDrop(event.clientX);
 });
@@ -1081,8 +1094,14 @@ handleDrop(touchX);
 
 // --- スマホ用：ゲームの「外側の背景（body等）」を左右に長押しすると風が吹く仕様 ---
 window.addEventListener('touchstart', function(event) {
-// ゲームコンテナやボタンの中を触っているときは風を発動させない（誤爆防止）
-if (container.contains(event.target) || event.target.closest('button') || event.target.closest('.modal-screen')) return;
+// エンディング中やモーダル・ボタン上では風を出さない
+if (document.getElementById('ending-screen').classList.contains('active') ||
+    container.contains(event.target) || 
+    event.target.closest('button') || 
+    event.target.closest('.modal-screen') || 
+    event.target.closest('.footer-links')) return;
+
+event.preventDefault();
 
 if (event.touches.length > 0) {
 const touchX = event.touches[0].clientX;
@@ -1119,6 +1138,7 @@ let opAnimStartTime = null;
 let opAnimFrame = null;
 
 opBtn.addEventListener('click', (e) => { e.stopPropagation(); startOpening(); });
+opBtn.addEventListener('touchend', (e) => { e.stopPropagation(); e.preventDefault(); startOpening(); });
 opCloseBtn.addEventListener('click', (e) => { e.stopPropagation(); closeOpening(); });
 opCloseBtn.addEventListener('touchend', (e) => { e.stopPropagation(); e.preventDefault(); closeOpening(); });
 
@@ -1188,9 +1208,25 @@ const edBtn = document.getElementById('btn-ed');
 const edScreen = document.getElementById('ending-screen');
 const edCloseBtn = document.getElementById('ed-close-btn');
 
-edBtn.addEventListener('click', (e) => { e.stopPropagation(); edScreen.classList.add('active'); });
-edCloseBtn.addEventListener('click', (e) => { e.stopPropagation(); edScreen.classList.remove('active'); });
-edCloseBtn.addEventListener('touchend', (e) => { e.stopPropagation(); e.preventDefault(); edScreen.classList.remove('active'); });
+edBtn.addEventListener('click', (e) => { 
+  e.stopPropagation(); 
+  edScreen.classList.add('active'); 
+});
+edBtn.addEventListener('touchend', (e) => { 
+  e.stopPropagation(); 
+  e.preventDefault(); 
+  edScreen.classList.add('active'); 
+});
+
+edCloseBtn.addEventListener('click', (e) => { 
+  e.stopPropagation(); 
+  edScreen.classList.remove('active'); 
+});
+edCloseBtn.addEventListener('touchend', (e) => { 
+  e.stopPropagation(); 
+  e.preventDefault(); 
+  edScreen.classList.remove('active'); 
+});
 
 opScreen.addEventListener('click', (e) => { e.stopPropagation(); });
 opScreen.addEventListener('touchstart', (e) => { e.stopPropagation(); }, { passive: false });
@@ -1203,6 +1239,7 @@ const updateModal = document.getElementById('update-modal');
 const updateCloseBtn = document.getElementById('update-close-btn');
 
 updateBtn.addEventListener('click', (e) => { e.stopPropagation(); updateModal.classList.add('active'); });
+updateBtn.addEventListener('touchend', (e) => { e.stopPropagation(); e.preventDefault(); updateModal.classList.add('active'); });
 updateCloseBtn.addEventListener('click', (e) => { e.stopPropagation(); updateModal.classList.remove('active'); });
 updateCloseBtn.addEventListener('touchend', (e) => { e.stopPropagation(); e.preventDefault(); updateModal.classList.remove('active'); });
 updateModal.addEventListener('click', (e) => { e.stopPropagation(); });
@@ -1214,6 +1251,7 @@ const devnoteModal = document.getElementById('devnote-modal');
 const devnoteCloseBtn = document.getElementById('devnote-close-btn');
 
 devnoteBtn.addEventListener('click', (e) => { e.stopPropagation(); devnoteModal.classList.add('active'); });
+devnoteBtn.addEventListener('touchend', (e) => { e.stopPropagation(); e.preventDefault(); devnoteModal.classList.add('active'); });
 devnoteCloseBtn.addEventListener('click', (e) => { e.stopPropagation(); devnoteModal.classList.remove('active'); });
 devnoteCloseBtn.addEventListener('touchend', (e) => { e.stopPropagation(); e.preventDefault(); devnoteModal.classList.remove('active'); });
 devnoteModal.addEventListener('click', (e) => { e.stopPropagation(); });
