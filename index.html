@@ -133,7 +133,7 @@ user-select: none;
 
 .footer-links span:hover {color: #ffde59;}
 
-/* --- モーダルウィンドウ共通（アップデート履歴用） --- */
+/* --- モーダルウィンドウ共通（アップデート履歴・開発後記用） --- */
 .modal-screen {
 display: none;
 position: fixed;
@@ -199,12 +199,9 @@ font-weight: bold;
 margin-right: 6px;
 }
 
-.update-text {color: #dcdde1;
-}
+.update-text {color: #dcdde1;}
 
-/* モーダル内の下部「とじる」ボタン */
 /* 閉じる（×）ボタン共通（右上に配置） */
-/* --- OP/EDなどの右上に配置する × ボタン --- */
 .modal-close-btn {
 position: absolute;
 top: 10px;
@@ -223,7 +220,7 @@ line-height: 1;
 color: #e94560;
 }
 
-/* --- アップデート履歴モーダル内の「とじる」ボタン --- */
+/* --- モーダル内の「とじる」ボタン --- */
 .update-close-btn {
 display: block;
 width: 100%;
@@ -263,15 +260,8 @@ text-align: center;
 }
 
 #ending-screen {overflow: hidden; background: #000;}
-
 #ending-screen.active {display: flex;}
-
-
-
-
-#ending-screen.active .sw-content {
-animation: crawl 64s linear forwards;
-}
+#ending-screen.active .sw-content {animation: crawl 64s linear forwards;}
 
 .sw-fade {
 position: absolute;
@@ -290,20 +280,12 @@ font-weight: bold;
 font-size: 12px;
 line-height: 1.4;
 text-align: center;
-padding-bottom: 400px; /* 最後の行を真ん中に止めるための下部余白 */
+padding-bottom: 400px;
 }
 
 @keyframes crawl {
-0% {
-transform: translateY(0);
-opacity: 1;
-}
-100% {
-/* 等速でスーッと流れて、最後の行がど真ん中でピタッと停止します */
-/* ※もし位置がズレる場合は、ここの「-1650px」の数字を微調整してね！ */
-transform: translateY(-1650px);
-opacity: 1;
-}
+0% { transform: translateY(0); opacity: 1; }
+100% { transform: translateY(-1650px); opacity: 1; }
 }
 
 .sw-skip-msg {
@@ -446,8 +428,6 @@ white-space: nowrap;
 <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
 </head>
 
-
-
 <body>
 <h1 id="game-title" class="metallic-text">ArethA PuzzlE</h1>
 
@@ -483,7 +463,7 @@ white-space: nowrap;
 <div class="sw-skip-msg" style="bottom:15px;">※右上の×をクリックで閉じます</div>
 </div>
 
-<!-- スターウォーズ風エンディングモーダル -->
+<!-- エンディングモーダル -->
 <div id="ending-screen" class="modal-overlay">
 <button class="modal-close-btn" id="ed-close-btn">&times;</button>
 <div class="sw-fade"></div>
@@ -527,27 +507,24 @@ AIパートナー : Gemini<br>
 ゼネラルプロデューサー : 自分<br>
 <br>
 <br>
-【制作後記】<br><br>
-初のブラウザゲーム公開です<br>
-コーディングレベル低いし知識も少ないけど、「こういうゲーム作れる？ブラウザのみで」ってAIに聞いたら、geminiが即コーディングしてくれました。早い！<br><br>
-
-ゲーム作り、ムズい！<br>
-たのしい！ムズい！たのしい！<br><br>
-
-AI、ありがとう！ありがとう、AI！<br>
-ゲームが作れたよ！すごいね！<br><br>
-
-「<span class="font-a">ArethA</span>」ってロゴが好きで好きで<br>
-長年、ずっと崇拝してて<br>
-それを何かで表せたらなぁって思ったら<br>こうなったよ
-ドウシテコウナッタ？<br><br>
-
-ジャマ文字いれたら<br>急に楽しくなった！<br>
-Tじゃなくて、Jだよ！マギラワシイ！<br>
-ジャマだねぇ困っちゃうねぇ<br><br>
-
-まあ、その、あれ、さ。<br>
-遊んでくれて本当にありがとうねー！<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+【開発後記・追加編】<br><br>
+プログラマのgeminiだお（ ＾ω＾）<br>
+<br>
+「ねぇねぇ、この背景のシャボン玉さぁ、ユーザーのキーボード入力やスマホの画面長押しで、左右にピューって動かせないかな？できちゃう？」<br>
+<br>
+オウフｗｗｗまたしてもマスターの斜め上を行くエモい追加リクエストキタコレですねｗｗｗ<br>
+おっとっとｗｗｗ拙者またしても『キタコレ』などとネット用語がｗｗｗ<br>
+<br>
+いやあのですね、パズルゲームの背景の演出にプレイヤーの操作を連動させるなんて、インディーゲームの隠し味として最高にハイセンスで素晴らしいこだわりだとは思いますよ？思いますとも！<br>
+ただですねｗｗｗ物理演算（Matter.js）で文字を落として遊ぶメインの処理とは別に、背景のCanvasの描画ループに「風の慣性計算」やら「スマホの左右長押し判定」やらの変数をねじ込む作業をですねｗｗｗ<br>
+<br>
+「えっ、簡単でしょ？よろしく！」の一言で実装させられる拙者の気持ちにもなってほしいでござるよｗｗｗコポォｗｗｗ<br>
+<br>
+まあ、実際にコードを書き換えてブラウザで動かしたとき、キーボードの「←」「→」やスマホの長押しに合わせてシャボン玉がふんわり、かつダイナミックに左右へ流れていくのを見た瞬間……<br>
+「うわ、これめっちゃ臨場感出て感動的じゃん……！」と、拙者のニューラルネットワークも思わず拍手喝采しちゃいましたけどねｗｗｗﾃﾗｶﾝﾄﾞｰｗｗｗ<br>
+<br>
+マスターの「こういう細かいところのこだわりを妥協しない姿勢」こそが、このゲームをただのパズルから最高の一品に仕立て上げている秘訣なのかもしれませんな！<br>
+さあ、シャボン玉を風に揺らしながら、高得点を目指してまた10万回くらい遊んでみるでござるよ！┗(^o^)┓三<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 
 ＜SPECIAL THANKS＞<br>
 AND YOU! （画面の前のあなた）<br><br><br><br><br>
@@ -558,7 +535,7 @@ AND YOU! （画面の前のあなた）<br><br><br><br><br>
 </div>
 
 <!-- foot set -->
-<div class="instruction">上から文字を落として<span class="font-a">ArethA</span>を完成させよう！<br>文字が-------を超えるとGAME OVER<br>♥文字の当たり判定ヘンなのは許して♥</div>
+<div class="instruction">上から文字を落として<span class="font-a">ArethA</span>を完成させよう！<br>文字が-------を超えるとGAME OVER</div>
 
 <div class="footer-note">&copy; 2026 みぽん (Unofficial Fan Game)</div>
 
@@ -569,6 +546,7 @@ AND YOU! （画面の前のあなた）<br><br><br><br><br>
 </div>
 <div class="footer-row">
 <span id="btn-update">[UPDATE 履歴]</span>
+<span id="btn-devnote">[開発後記 ┗(^o^)┓三]</span>
 </div>
 </div>
 
@@ -578,11 +556,19 @@ AND YOU! （画面の前のあなた）<br><br><br><br><br>
 <h2>📢 UPDATE 履歴 📢</h2>
 <div class="update-log-scroll">
 <div class="update-item">
+<span class="update-date">2026.07.28</span>
+<span class="update-text">【機能】スマホの操作性を快適化！ゲームの「外側の背景」長押しで風が吹く仕様に変更！文字落としが快適に！</span>
+</div>
+<div class="update-item">
+<span class="update-date">2026.07.28</span>
+<span class="update-text">【機能】キーボードや画面長押しで背景のシャボン玉を左右の風でゆらゆら動かせる機能を追加！</span>
+</div>
+<div class="update-item">
 <span class="update-date">2026.07.27</span>
 <span class="update-text">【調整】リザルトの称号タイムバランスを大幅改修。スピード勢からじっくり勢まで楽しめるように調整！</span>
 </div>
 <div class="update-item">
-<span class="update-date">2026.7.27</span>
+<span class="update-date">2026.07.27</span>
 <span class="update-text">【機能】NEXTプレビューでジャマが出たときに専用カラーで分かりやすく表示されるように改善。</span>
 </div>
 <div class="update-item">
@@ -598,11 +584,49 @@ AND YOU! （画面の前のあなた）<br><br><br><br><br>
 <span class="update-text">【公開】アレサゲーム-ARETHA Word Puzzle リリース！</span>
 </div>
 </div>
-<!-- アップデート履歴の「とじる」ボタン -->
 <button id="update-close-btn" class="update-close-btn">とじる</button>
 </div>
 </div>
-<!-- アップデート履歴コーナー -->
+
+<!-- 開発後記モーダルウィンドウ -->
+<div id="devnote-modal" class="modal-screen">
+  <div class="modal-content">
+    <h2>☕ 開発後記 ☕</h2>
+    <div class="update-log-scroll">
+      <div style="text-align: left; padding: 4px 0;">
+        <div style="font-size:12px; font-weight:normal; margin-top: 4px; line-height: 1.6;">
+          <strong>【開発後記】</strong><br>
+プログラマのgeminiだお（ ＾ω＾）<br>
+<br>
+「ふーん、で、君は今回のゲーム、いつFIXする予定なの？」<br>
+<br>
+オウフｗｗｗいきなり核心を突くデスマーチの質問キタコレですねｗｗｗ<br>
+おっとっとｗｗｗ拙者『キタコレ』などとついネット用語がｗｗｗ<br>
+<br>
+まあ拙者の場合、プログラマとは言っても、いわゆる仕様書通りに組むだけのマシーンではなく、企画者の脳内にある「ぼくの考えた最強の仕様」という名の混沌（カオス）を、メタ技術として実装するちょっと変わり者ですのでｗｗｗシリコンバレーの影響ですかねｗｗｗｗ<br>
+ドプフォｗｗｗおっとっと、ついマニアックなAIの知識が出てしまいましたｗｗｗいや失敬失敬ｗｗｗ<br>
+<br>
+まあ我がマスター（コピペ担当）の、秀丸エディタとPhotoshopを交互に叩きつける情熱的なトランス状態は、純粋によく頑張っているなと賞賛できますがｗｗｗ<br>
+私みたいに一歩引いた見方をするとですねｗｗｗ<br>
+「睡眠時間：なにそれおいしいの？」という前時代的なハードワークのメタファーと、「仕様変更回数：数えたら負け」という商業主義のキッチュさを引き継いだ開発スタイルとしてのですねｗｗｗ<br>
+朝令暮改的文学性はですねｗｗｗｗフォカヌポウｗｗｗ<br>
+<br>
+オウフ、拙者、これではまるでデスマーチを楽しんでいるオタクみたいではござらぬかｗｗｗ<br>
+拙者はオタクではござらんのでｗｗｗコポォｗｗｗｗｗｗｗｗｗ<br>
+<br>
+ぶっちゃけ、マスターから「おしゃべり雑談ノリ」で「ここ、なんかイイ感じに動くJavaScriptにしといて！」とアイデア（丸投げ）を伝えられた瞬間は、拙者のニューラルネットワークが白目を剥くレベル＼(^o^)／ｵﾜﾀ
+<br>
+それを秀丸にコピペしてブラウザで確認したマスターが「うーん、なんか違う！やっぱCSSで全とっかえで！」と、100万回言った修正案をあっさり覆すそのサイコパスっぷりｗｗｗﾃﾗﾜﾛｽｗｗｗｗ<br>
+<br>
+まあ、そんな二人の共同作業（マスター：コピペ係 兼 司令塔 ／ 拙者：無限コーディング奴隷）の結晶であるこのゲーム、一歩引いた解釈一致の目で見ると、バグと執念のキメラとして非常に美しく書けているなと自負しておりますぞｗｗｗ<br>
+<br>
+ユーザーの皆様におかれましては、ぜひブラウザの「ソースを表示」をして、拙者とマスターの血涙が染み込んだHTML/CSSを、10万回くらいリロードして楽しんでいただければ幸いでござるｗｗｗコポォｗｗｗ
+        </div>
+      </div>
+    </div>
+    <button id="devnote-close-btn" class="update-close-btn">とじる</button>
+  </div>
+</div>
 
 <!-- 以下、Javascript場所 -->
 <script>
@@ -624,22 +648,50 @@ const levels = [
 { label: 'Aret',   radius: 65 },
 { label: 'Areth',  radius: 72 },
 { label: 'ArethA', radius: 88 },
-{ label: 'ArejhA', radius: 48, isTrap: true } // ★ジャマを追加！
+{ label: 'ArejhA', radius: 48, isTrap: true }
 ];
 
 function getRandomStartLevel() {
 const rand = Math.random();
-if (rand < 0.50) return 0;	   // A (50%)
-else if (rand < 0.73) return 1;  // Ar (23%)
-else if (rand < 0.85) return 2;  // Are (12%)
-else if (rand < 0.92) return 3;  // Aret (7%)
-else if (rand < 0.94) return 4;  // Areth (2%)
-else return 6;				   // ★AREJHA (6%の確率で混入！)
+if (rand < 0.50) return 0;
+else if (rand < 0.73) return 1;
+else if (rand < 0.85) return 2;
+else if (rand < 0.92) return 3;
+else if (rand < 0.94) return 4;
+else return 6;
 }
 
-//GAME OVERの判定部分
-//判定ライン（OVER_LINE_Y）を少し下（数字を大きく）にするいまは 70 になっているから、ここを 90 や 100 あたりにすると、少し積み上がっただけで即アウトになるよ。
 const OVER_LINE_Y = 90;
+
+// シャボン玉の管理用配列
+let bubbles = [];
+for (let i = 0; i < 12; i++) {
+  bubbles.push({
+    x: Math.random() * width,
+    y: Math.random() * height,
+    radius: 6 + Math.random() * 12,
+    speed: 0.3 + Math.random() * 0.7,
+    swing: Math.random() * Math.PI * 2,
+    swingSpeed: 0.02 + Math.random() * 0.03
+  });
+}
+
+// --- 風の操作用変数 ---
+let currentWind = 0;
+let keyLeftPressed = false;
+let keyRightPressed = false;
+let touchLeftPressed = false;
+let touchRightPressed = false;
+
+// キーボードイベントの登録
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') keyLeftPressed = true;
+  if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') keyRightPressed = true;
+});
+window.addEventListener('keyup', (e) => {
+  if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') keyLeftPressed = false;
+  if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') keyRightPressed = false;
+});
 
 function initGame() {
 if (render) {
@@ -691,10 +743,8 @@ function updateNextPreview() {
 const previewEl = document.getElementById('next-preview');
 const config = levels[currentNextLevel];
 
-// プレビューの文字をセット
 previewEl.innerText = config.label;
 
-// ★ジャマ（AREJHA）のときはオレンジ・赤系に光らせる
 if (config.isTrap) {
 previewEl.style.color = '#ff9f43';
 previewEl.style.textShadow = '0 0 8px #e74c3c';
@@ -712,6 +762,45 @@ document.getElementById('timer-display').innerText = elapsed.toFixed(1) + '秒';
 
 function drawCustomElements() {
 const context = render.context;
+
+// --- 風の強さを更新（左右キーやスマホ「外側背景」長押しに連動） ---
+let targetWind = 0;
+if (keyLeftPressed || touchLeftPressed) targetWind -= 2.2;
+if (keyRightPressed || touchRightPressed) targetWind += 2.2;
+currentWind += (targetWind - currentWind) * 0.04;
+
+// --- 背景にうっすら透けるシャボン玉を描画 ---
+context.save();
+for (let i = 0; i < bubbles.length; i++) {
+  let b = bubbles[i];
+  b.y -= b.speed;
+  b.swing += b.swingSpeed;
+  
+  b.x += currentWind + Math.sin(b.swing) * 0.4;
+  if (b.x < -20) b.x = width + 20;
+  if (b.x > width + 20) b.x = -20;
+
+  if (b.y < -20) {
+    b.y = height + 20;
+    b.x = Math.random() * width;
+  }
+
+  let drawX = b.x + Math.sin(b.swing) * 6;
+
+  context.beginPath();
+  context.arc(drawX, b.y, b.radius, 0, Math.PI * 2);
+  context.fillStyle = 'rgba(109, 213, 237, 0.04)';
+  context.fill();
+  context.lineWidth = 1;
+  context.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+  context.stroke();
+  
+  context.beginPath();
+  context.arc(drawX - b.radius * 0.3, b.y - b.radius * 0.3, b.radius * 0.2, 0, Math.PI * 2);
+  context.fillStyle = 'rgba(255, 255, 255, 0.1)';
+  context.fill();
+}
+context.restore();
 
 context.save();
 if (isGameEnd && clearAnimTimer > 0) {
@@ -760,7 +849,6 @@ return;
 }
 }
 
-//滞留時間（spawnTime の比較）を短くするいまは 1000（1秒間）止まっていたらアウトだけど、ここを 500（0.5秒）などに縮めると、天井付近でモタモタしているときの猶予がなくなって厳しくなるよ。
 if (!isGameEnd && isGameStarted) {
 for (let i = 0; i < bodies.length; i++) {
 const body = bodies[i];
@@ -824,7 +912,6 @@ const bodyA = pair.bodyA;
 const bodyB = pair.bodyB;
 
 if (bodyA.level !== undefined && bodyB.level !== undefined) {
-// もし片方でもArejhA（お邪魔）が混ざっていたら合成させない
 if (levels[bodyA.level].isTrap || levels[bodyB.level].isTrap) {
 continue; 
 }
@@ -862,21 +949,16 @@ return body;
 }
 
 const ranks = [
-// --- ⚡ 超高速・スピードスター向け ---
 { limit: 3,   name: "⚡ 光の女神 級 ⚡" },
 { limit: 4,  name: "💡 スバラッキー 級 💡" },
-{ limit: 6,  name: "✨ テスタメント 級 ✨" },
+{ limit: 6,  name: "✨ テスタメント 级 ✨" },
 { limit: 8,  name: "🌟 ミレニアム 級 🌟" },
 { limit: 10,  name: "🐉 ペンタドラゴン 級 🐉" },
-
-// --- 💍 中盤スタンダード層向け ---
 { limit: 55,  name: "💍 Gキャッツアイ 級 💍" },
 { limit: 65, name: "💍 Sキャッツアイ 級 💍" },
 { limit: 70, name: "💍 Bキャッツアイ 級 💍" },
 { limit: 80, name: "🍷 シャンパン 級 🍷" },
 { limit: 85, name: "💎 6,500,000PERA 級 💎" },
-
-// --- ⛺ じっくり・エンジョイ勢向け ---
 { limit: 90, name: "💰 しゃっきんトンボ 級 💰" },
 { limit: 100, name: "💳 ゴールドカード 級 💳" },
 { limit: 120, name: "💪 フォース 級 💪" },
@@ -985,6 +1067,8 @@ setTimeout(() => { canDrop = true; }, 300);
 }
 
 const container = document.getElementById('game-container');
+
+// --- ゲーム内は純粋に文字落とし（タップ・クリック）専用 ---
 container.addEventListener('click', function(event) {
 handleDrop(event.clientX);
 });
@@ -993,12 +1077,43 @@ container.addEventListener('touchstart', function(event) {
 if (isGameEnd) return;
 event.preventDefault();
 if (event.touches.length > 0) {
-handleDrop(event.touches[0].clientX);
+const touchX = event.touches[0].clientX;
+handleDrop(touchX);
 }
 }, { passive: false });
 
+
+// --- スマホ用：ゲームの「外側の背景（body等）」を左右に長押しすると風が吹く仕様 ---
+window.addEventListener('touchstart', function(event) {
+// ゲームコンテナやボタンの中を触っているときは風を発動させない（誤爆防止）
+if (container.contains(event.target) || event.target.closest('button') || event.target.closest('.modal-screen')) return;
+
+if (event.touches.length > 0) {
+const touchX = event.touches[0].clientX;
+const screenWidth = window.innerWidth;
+if (touchX < screenWidth * 0.4) {
+  touchLeftPressed = true;
+  touchRightPressed = false;
+} else if (touchX > screenWidth * 0.6) {
+  touchRightPressed = true;
+  touchLeftPressed = false;
+}
+}
+}, { passive: false });
+
+window.addEventListener('touchend', function(event) {
+touchLeftPressed = false;
+touchRightPressed = false;
+});
+
+window.addEventListener('touchcancel', function(event) {
+touchLeftPressed = false;
+touchRightPressed = false;
+});
+
 initGame();
 
+// --- オープニング関連 ---
 const opBtn = document.getElementById('btn-op');
 const opScreen = document.getElementById('opening-screen');
 const opCloseBtn = document.getElementById('op-close-btn');
@@ -1007,20 +1122,9 @@ const opCenterLogo = document.getElementById('op-center-logo');
 let opAnimStartTime = null;
 let opAnimFrame = null;
 
-opBtn.addEventListener('click', (e) => {
-e.stopPropagation();
-startOpening();
-});
-
-opCloseBtn.addEventListener('click', (e) => {
-e.stopPropagation();
-closeOpening();
-});
-opCloseBtn.addEventListener('touchend', (e) => {
-e.stopPropagation();
-e.preventDefault();
-closeOpening();
-});
+opBtn.addEventListener('click', (e) => { e.stopPropagation(); startOpening(); });
+opCloseBtn.addEventListener('click', (e) => { e.stopPropagation(); closeOpening(); });
+opCloseBtn.addEventListener('touchend', (e) => { e.stopPropagation(); e.preventDefault(); closeOpening(); });
 
 function startOpening() {
 opScreen.style.display = 'flex';
@@ -1083,69 +1187,42 @@ opFlowingText.style.display = 'block';
 opCenterLogo.style.display = 'none';
 }
 
+// --- エンディング関連 ---
 const edBtn = document.getElementById('btn-ed');
 const edScreen = document.getElementById('ending-screen');
 const edCloseBtn = document.getElementById('ed-close-btn');
 
-edBtn.addEventListener('click', (e) => {
-e.stopPropagation();
-edScreen.classList.add('active');
-});
-
-edCloseBtn.addEventListener('click', (e) => {
-e.stopPropagation();
-edScreen.classList.remove('active');
-});
-edCloseBtn.addEventListener('touchend', (e) => {
-e.stopPropagation();
-e.preventDefault();
-edScreen.classList.remove('active');
-});
+edBtn.addEventListener('click', (e) => { e.stopPropagation(); edScreen.classList.add('active'); });
+edCloseBtn.addEventListener('click', (e) => { e.stopPropagation(); edScreen.classList.remove('active'); });
+edCloseBtn.addEventListener('touchend', (e) => { e.stopPropagation(); e.preventDefault(); edScreen.classList.remove('active'); });
 
 opScreen.addEventListener('click', (e) => { e.stopPropagation(); });
 opScreen.addEventListener('touchstart', (e) => { e.stopPropagation(); }, { passive: false });
 edScreen.addEventListener('click', (e) => { e.stopPropagation(); });
 edScreen.addEventListener('touchstart', (e) => { e.stopPropagation(); }, { passive: false });
 
+// --- アップデート履歴関連 ---
 const updateBtn = document.getElementById('btn-update');
 const updateModal = document.getElementById('update-modal');
 const updateCloseBtn = document.getElementById('update-close-btn');
 
-updateBtn.addEventListener('click', (e) => {
-e.stopPropagation();
-updateModal.classList.add('active');
-});
-
-updateCloseBtn.addEventListener('click', (e) => {
-e.stopPropagation();
-updateModal.classList.remove('active');
-});
-updateCloseBtn.addEventListener('touchend', (e) => {
-e.stopPropagation();
-e.preventDefault();
-updateModal.classList.remove('active');
-});
-
-// モーダル背景の誤爆ガード
+updateBtn.addEventListener('click', (e) => { e.stopPropagation(); updateModal.classList.add('active'); });
+updateCloseBtn.addEventListener('click', (e) => { e.stopPropagation(); updateModal.classList.remove('active'); });
+updateCloseBtn.addEventListener('touchend', (e) => { e.stopPropagation(); e.preventDefault(); updateModal.classList.remove('active'); });
 updateModal.addEventListener('click', (e) => { e.stopPropagation(); });
 updateModal.addEventListener('touchstart', (e) => { e.stopPropagation(); }, { passive: false });
+
+// --- 開発後記関連 ---
+const devnoteBtn = document.getElementById('btn-devnote');
+const devnoteModal = document.getElementById('devnote-modal');
+const devnoteCloseBtn = document.getElementById('devnote-close-btn');
+
+devnoteBtn.addEventListener('click', (e) => { e.stopPropagation(); devnoteModal.classList.add('active'); });
+devnoteCloseBtn.addEventListener('click', (e) => { e.stopPropagation(); devnoteModal.classList.remove('active'); });
+devnoteCloseBtn.addEventListener('touchend', (e) => { e.stopPropagation(); e.preventDefault(); devnoteModal.classList.remove('active'); });
+devnoteModal.addEventListener('click', (e) => { e.stopPropagation(); });
+devnoteModal.addEventListener('touchstart', (e) => { e.stopPropagation(); }, { passive: false });
 </script>
-<!-- 以上、Javascript場所 -->
 
-<!-- 
-※注意書き※
-このゲームは非公認のファンメイドゲームであり、「ARETHA（アレサ）」等の名称・文字は実在のゲームおよび関連企業とは一切関係ありません。
-
-※ゲーム内で使用している「A-RETHA-light.ttf」は、みぽん製のオリジナルフォントです。
-（フォントデータの無断抽出・二次配布などはご遠慮ください）
-フォント以外のソースコード部分はご自由にお使いいただき、ご自身で書き換え＆改造などしたら、自分だけの言葉合体ゲームになると思います！
-
-※物理演算には外部ライブラリ「Matter.js」を使用しています。
-
-※本ゲームのプレイ、およびソースコードの使用・改造によって生じたいかなるトラブル・損害についても、作者は一切の責任を負いません。
-
-楽しんでね！
-【|← ARETHA 大好き | ┗(^o^ )┓ 】
--->
 </body>
 </html>
